@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    network_mode: satbnet
+    image: postgres
+    container_name: dev_db
+    volumes:
+      - postgres_dev_db:/var/lib/postgresql/data
+      - ./postgres_dev_config:/var/lib/postgresql/config
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  web:
+    network_mode: satbnet
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: dev_web
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+volumes:
+  postgres_db:
+    external: true
