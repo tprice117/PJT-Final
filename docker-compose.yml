@@ -17,9 +17,9 @@ services:
   web:
     network_mode: satbnet
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
+    command: python pjtsite/manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     environment:
