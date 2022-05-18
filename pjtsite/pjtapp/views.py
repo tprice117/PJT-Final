@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 # Create your views here.
 def home(request):
   OrderItemsList = OrderItems.objects.all()
-  return render(request, 'home.html', {'OrderItemsList': OrderItemsList})
+  # return render(request, 'home.html', {'OrderItemsList': OrderItemsList})
 
 # def OrderItems(request):
 #   OrderItemsList = OrderItems.objects.all()
