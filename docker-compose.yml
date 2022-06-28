@@ -4,8 +4,6 @@ services:
   db:
     restart: always
     #network_mode: satbnet
-    networks:
-      - satbnet
     image: postgres:latest
     volumes:
       - postgres_db:/var/lib/postgresql/data
@@ -19,8 +17,6 @@ services:
 
   web:
     #network_mode: satbnet
-    networks:
-      - satbnet
     build: .
     volumes:
       - .:/code
@@ -32,13 +28,8 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    links:
-      - db:db
     depends_on:
       - db
-networks:
-  satbnet:
-    driver: bridge
 volumes:
   postgres_db:
     external: true
