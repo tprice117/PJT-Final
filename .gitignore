@@ -3,6 +3,7 @@
 *.pot
 *.pyc
 pycache
+*.csv
 
 # Backup files # 
 *.bak
