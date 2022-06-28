@@ -19,7 +19,8 @@ def run():
 
     pm, created = PrintModels.objects.get_or_create(ModelSKU=row[0])
 
-    pfd = PrintFileData(ParentSKU=pm, FileName=row[1], Scope=row[2],
+    pfd = PrintFileData(FileName=row[1], Scope=row[2],
     Printer=row[3], Color=row[4], FileWeight=row[5],
     FileTime=row[6], PrintQuantity=row[7], PrintWeight=row[8],
-    PrintTime=row[9])
+    PrintTime=row[9], ParentSKU=pm)
+    pfd.save()
