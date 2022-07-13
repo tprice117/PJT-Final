@@ -23,8 +23,10 @@ def run():
     oi = OrderItems(OrdersID=o, ItemSKU=pm, 
     OrderQuantity=row[2])
     oi.save()
-
+    
   if PrintModels.objects.filter(ModelName__exact=''):
-    c = PrintModels.objects.filter(ModelName__exact='')
-    logging.warning(c)
+    c = PrintModels.objects.filter(ModelName__exact='').values()
+    print(c[1])
+    for value in c.values():
+      logging.warning(value)
     PrintModels.objects.filter(ModelName__exact='').delete()
