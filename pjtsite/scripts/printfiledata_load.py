@@ -13,7 +13,7 @@ def run():
   reader = csv.reader(fhand)
   next(reader)
 
-  PrintFileData.objects.all().delete()
+  #PrintFileData.objects.all().delete()
 
   for row in reader:
     print(row)

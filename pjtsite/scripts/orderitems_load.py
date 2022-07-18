@@ -13,7 +13,7 @@ def run():
   reader = csv.reader(fhand)
   next(reader)
 
-  OrderItems.objects.all().delete()
+  #OrderItems.objects.all().delete()
 
   for row in reader:
     print(row)

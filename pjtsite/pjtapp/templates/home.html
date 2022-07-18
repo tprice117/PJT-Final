@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Test PJT</title>
-    <link rel="stylesheet" href="{%static 'styles.css'%}" />
+    <link rel="stylesheet" href="{%static 'style.css'%}" />
   </head>
   <body>
     <h1>Home Page</h1>
@@ -35,10 +35,13 @@
         });
       }
     </script>
+
     <div class="container">
       <div class="center">
-        <button class="button">Upload new Order Items</button>
-        <button class="button">Upload new Print Models</button>
+        <a href="uploadorders" class="button">Upload new Orders</a>
+        <a href="uploadprintdata" class="button">Upload new Print Models</a>
+        <a href="details" class="button">Order Details</a>
+        <a href="summary" class="button">Order Summary</a>
       </div>
     </div>
   </body>

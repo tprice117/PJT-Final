@@ -1,0 +1,27 @@
+{% load static from static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Test PJT</title>
+    <link rel="stylesheet" href="{%static 'style.css'%}" />
+  </head>
+  <body>
+    <h1>Upload Orders</h1>
+    <div class="container-2">
+      {% comment %} CHANGE TO FORMS {% endcomment %}      
+      <div class="box-1">
+        <label for "ordersfile">Select Print File Data CSV File:</label>
+        <input type="file" id="ordersfile" name="ordersfile" accept=".csv">
+      </div>
+      <div class="box-2">
+        <label for "orderitemsfile">Select an Print Models CSV File:</label>
+        <input type="file" id="orderitemsfile" name="orderitemsfile" accept=".csv">
+      </div>
+      <div class="box-3">
+        <button>Submit</button>
+      </div>
+    </div>
+  </body>
+</html>

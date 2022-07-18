@@ -37,11 +37,8 @@ How to get Data Importing Scripts to Work:
 
 2. Use the scripts through a bash shell integrated on the web container (CLI or attaching the bash shell directly)
 
-3. Run commands for loading data scripts:
-	- python manage.py runscript orders_load
-	- python manage.py runscript printmodels_load
-	- python manage.py runscript orderitems_load
-	- python manage.py runscript printfiledata_load
+3. Run command for loading data scripts initially:
+	- python manage.py runscript initial_load
 
 !!!WARNING!!! If initial loading, orders_load and printmodels_load must be run first before other scripts as other scripts are dependent on them
 

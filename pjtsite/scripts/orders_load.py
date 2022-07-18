@@ -5,21 +5,13 @@ from pjtapp.models import Orders
 import numpy
 import pandas as pd
 
-# def run2():
-#   path = os.getcwd()
-#   print(path)
-#   path_parent = os.path.dirname(os.getcwd())
-#   os.chdir(path_parent)
-#   print(path_parent)
-# run2()
-
 def run():
   fhand = open('pjtapp/PJT-Orders.csv')
   
   reader = csv.reader(fhand)
   next(reader)
   
-  Orders.objects.all().delete()
+  #Orders.objects.all().delete()
 
   for row in reader:
     print(row)
