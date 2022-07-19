@@ -40,6 +40,4 @@ How to get Data Importing Scripts to Work:
 3. Run command for loading data scripts initially:
 	- python manage.py runscript initial_load
 
-!!!WARNING!!! If initial loading, orders_load and printmodels_load must be run first before other scripts as other scripts are dependent on them
-
 Make sure the data is loaded correctly by using Dbeaver CE, pgAdmin, or any other database viewer
