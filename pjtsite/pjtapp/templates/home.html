@@ -10,13 +10,37 @@
   <body>
     <h1>Home Page</h1>
 
-    <p>{{ OrderItemsList }}</p>
+    {% for j in ordersSet %}
+    <button type="button" class="collapsible">
+      {%if j.OrderCompleted == 0%} <input type="checkbox" />{% endif %} OrderID:
+      {{j.OrdersID}}, Full Name: {{ j.FullName}}, Order Date: {{j.SaleDate}},
+      Ship Date: {{j.RequiredShipDate}}
+    </button>
+    <div class="content">
+      <p>OrdersID: {{orderItemsSet}}</p>
+    </div>
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
 
-    <p>{{ OrderItemsListQuery }}</p>
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.display === "block") {
+            content.style.display = "none";
+          } else {
+            content.style.display = "block";
+          }
+        });
+      }
+    </script>
+    {% endfor %}
 
+    <!--
     <button type="button" class="collapsible">Open Collapsible</button>
     <div class="content">
-      <p>Lorem ipsum...</p>
+      <p></p>
     </div>
 
     <script>
@@ -35,7 +59,8 @@
         });
       }
     </script>
-
+    -->
+    {% comment %} {% for j in OrderItemsList %} {% endfor %} {% endcomment %}
     <div class="container">
       <div class="center">
         <a href="uploadorders" class="button">Upload new Orders</a>

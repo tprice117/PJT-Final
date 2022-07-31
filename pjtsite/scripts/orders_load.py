@@ -5,8 +5,8 @@ from pjtapp.models import Orders
 import numpy
 import pandas as pd
 
-def run():
-  fhand = open('pjtapp/PJT-Orders.csv')
+def run(path):
+  fhand = open(path)
   
   reader = csv.reader(fhand)
   next(reader)
