@@ -5,20 +5,31 @@
   <head>
     <meta charset="utf-8" />
     <title>Test PJT</title>
+  
+    {% comment %} bootstrap {% endcomment %}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
     <link rel="stylesheet" href="{%static 'style.css'%}" />
   </head>
   <body>
     <h1>Home Page</h1>
+    <div class="container p-3">
+      {% for j in ordersSet %}
+      <button type="button" class="collapsible">
+        {%if j.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
+        OrderID: {{j.OrdersID}}, Full Name: {{ j.FullName}}, Order Date:
+        {{j.SaleDate}}, Ship Date: {{j.RequiredShipDate}}
+      </button>
 
-    {% for j in ordersSet %}
-    <button type="button" class="collapsible">
-      {%if j.OrderCompleted == 0%} <input type="checkbox" />{% endif %} OrderID:
-      {{j.OrdersID}}, Full Name: {{ j.FullName}}, Order Date: {{j.SaleDate}},
-      Ship Date: {{j.RequiredShipDate}}
-    </button>
-    <div class="content">
-      <p>OrdersID: {{orderItemsSet}}</p>
-    </div>
+      <div class="content">
+        <p>OrdersID: {{id}}</p>
+      </div>
+      {% endfor %}
     <script>
       var coll = document.getElementsByClassName("collapsible");
       var i;
@@ -35,8 +46,6 @@
         });
       }
     </script>
-    {% endfor %}
-
     <!--
     <button type="button" class="collapsible">Open Collapsible</button>
     <div class="content">
