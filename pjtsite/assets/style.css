@@ -96,3 +96,6 @@ a.button {
   order: 3;
   padding: 10px;
 }
+.button2 {
+  border-radius: 50%;
+}

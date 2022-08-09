@@ -1,3 +1,4 @@
+from pipes import Template
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 
@@ -6,6 +7,7 @@ from .models import OrderItems
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from scripts import orders_load
+from django.views.generic import TemplateView, ListView
 # Create your views here.
 
 # class home(TemplateView):
@@ -15,14 +17,19 @@ from scripts import orders_load
 #       context["ordersSet"] = Orders.objects.all()
 #       return context
 
+# class homeListView(ListView):
+#   template_name = 'home.html'
+#   context_object_name = 'orders_list'
+#   def get_queryset(self):
+#     return Orders.objects.all()
+
 def home(request):
-  contextmap = {}
-  contextmap["orderItemsSet"] = OrderItems.objects.all()
-  contextmap["ordersSet"] = Orders.objects.all()
-  # OrderItemsList = OrderItems.objects.all()
-  # orderItems = OrderItems.objects.all()
+  # contextmap = {}
+  # contextmap["orderItemsSet"] = OrderItems.objects.select_related()
+  # contextmap["ordersSet"] = Orders.objects.select_related()
+  ojoinoi = OrderItems.objects.select_related('OrdersID')
   # orders = Orders.objects.all()
-  return render(request, 'home.html', contextmap )
+  return render(request, 'home.html', {'ojoinoi': ojoinoi})
   
 # return render(request, 'home.html', {'orderItems': orderItems, 'orders': orders} )
 def uploadorders(request):
