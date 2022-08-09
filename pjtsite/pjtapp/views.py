@@ -27,7 +27,7 @@ def home(request):
   # contextmap = {}
   # contextmap["orderItemsSet"] = OrderItems.objects.select_related()
   # contextmap["ordersSet"] = Orders.objects.select_related()
-  ojoinoi = OrderItems.objects.select_related('OrdersID')
+  ojoinoi = OrderItems.objects.all()
   # orders = Orders.objects.all()
   return render(request, 'home.html', {'ojoinoi': ojoinoi})
   

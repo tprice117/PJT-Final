@@ -25,17 +25,15 @@
         <div align="right">
           <a href="details" class="button button2">Order Details</a>
         </div>
-        {%if j.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
-        OrderID: {{j.OrdersID}}, Full Name: {{ j.FullName}}, Order Date:
-        {{j.SaleDate}}, Ship Date: {{j.RequiredShipDate}} 
+        {%if j.OrdersID.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
+        OrderID: {{j.OrdersID.OrdersID}}, Full Name: {{ j.OrdersID.FullName}}, Order Date:
+        {{j.OrdersID.SaleDate}}, Ship Date: {{j.OrdersID.RequiredShipDate}} 
       </button>
-      {% for oi in ojoinoi %}
       <div class="content">
           <p><br>
-          Order Item: {{oi.ItemSKU}}   
+          Item SKU: {{j.ItemSKU}}, Item Name: {{j.ItemSKU.ModelName}}, OrderQTY: {{j.OrderQuantity}}
           </p>
       </div>
-      {% endfor %}
 
     {% endfor %}
     <script>
