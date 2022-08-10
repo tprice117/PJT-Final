@@ -7,19 +7,19 @@
     <title>Test PJT</title>
     {% comment %} CSS defs {% endcomment %}
     {% comment %} bootstrap {% endcomment %}
-    <link
+    {% comment %} <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
-    />
+    /> {% endcomment %}
 
-    <link rel="stylesheet" href="{%static 'style.css'%}" />
+    <link rel="stylesheet" href="{%static 'litera.css'%}" />
     {% comment %} CSS defs {% endcomment %}
   </head>
   <body>
     <h1>Home Page</h1>
-    <div class="container p-3">
+    <div class="container-2">
     {% for j in ojoinoi %}
       <button type="button" class="collapsible">
         <div align="right">
@@ -29,11 +29,14 @@
         OrderID: {{j.OrdersID.OrdersID}}, Full Name: {{ j.OrdersID.FullName}}, Order Date:
         {{j.OrdersID.SaleDate}}, Ship Date: {{j.OrdersID.RequiredShipDate}} 
       </button>
+      {% for j in ojoinoi %}
+
       <div class="content">
           <p><br>
           Item SKU: {{j.ItemSKU}}, Item Name: {{j.ItemSKU.ModelName}}, OrderQTY: {{j.OrderQuantity}}
           </p>
       </div>
+      {% endfor %}
 
     {% endfor %}
     <script>
