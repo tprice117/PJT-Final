@@ -34,6 +34,15 @@
       {{order1}}
       <p></p>
       {{newOrderList}}
+      <p></p>
+      {{printmodels}}
+      <p></p>
+      {{testList}}
+      <p></p>
+      {{testList3}}
+      <p></p>
+      {{testList2}}
+
     {% for order in newOrderList %}
     <button type="button" class="collapsible">
       <div align="right">
@@ -47,7 +56,8 @@
       <div class="content">
       <p>
         <br/>
-         Item SKU: {{orderitem.OrderSKU}}, Item Name:, OrderQTY: {{orderitem.OrderQuantity}} 
+         Item SKU: {{orderitem.OrderSKU}}, Item Name: {{orderitem.ModelName}}, 
+         OrderQTY: {{orderitem.OrderQuantity}} 
       </p>
       </div>
       {% endfor %} 
