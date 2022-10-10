@@ -41,10 +41,6 @@ def home(request):
         if dictEntry['OrderSKU'] == printmodels[l]['ModelSKU']:
           dictEntry['ModelName'] = printmodels[l]['ModelName']
 
-      # for sku in printmodels:
-      #   if(dictEntry[sku][2] == printmodels[sku]["ModelSKU"]):
-      #     dictEntry["ModelName"] = printmodels[sku]["ModelName"]
-
       itemList.append(dictEntry)
       j+=1
     order1['itemList'] = itemList
