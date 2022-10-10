@@ -16,15 +16,35 @@ def home(request):
   i=0
   j=0
   newOrderList=[]
+  testList=[]
+  testList3=[]
+  testList2=[]
   length = len(orders)
   while(i < len(orders)-3):
     itemList = []
+
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
     "SaleDate":orders[i]['SaleDate'], "RequiredShipDate":orders[i]['RequiredShipDate']}
+
     while(j < len(orderitems) and orderitems[j]['OrdersID_id'] == orders[i]['OrdersID']):
-      dictEntry = {'OrdersID':orders[i]['OrdersID'], 'OrderSKU': orderitems[i]['ItemSKU_id'],
-      'OrderQuantity': orderitems[i]['OrderQuantity']}
       
+      dictEntry = {
+      'OrdersID':orders[i]['OrdersID'], 
+      'OrderSKU': orderitems[i]['ItemSKU_id'],
+      'OrderQuantity': orderitems[i]['OrderQuantity']}
+
+      testList.append(printmodels[i]["ModelSKU"])
+      testList3.append(printmodels[j]["ModelSKU"])
+      testList2.append(dictEntry["OrderSKU"])
+
+      for l in range(len(printmodels)):
+        if dictEntry['OrderSKU'] == printmodels[l]['ModelSKU']:
+          dictEntry['ModelName'] = printmodels[l]['ModelName']
+
+      # for sku in printmodels:
+      #   if(dictEntry[sku][2] == printmodels[sku]["ModelSKU"]):
+      #     dictEntry["ModelName"] = printmodels[sku]["ModelName"]
+
       itemList.append(dictEntry)
       j+=1
     order1['itemList'] = itemList
@@ -56,7 +76,11 @@ def home(request):
       #   orders[i]["items"] = orderitems
       # if (orders[i]["OrdersID"] == 10761):
       #   orders[i]["OrdersID"] = "f"
-  return render(request, 'home.html', {'orders' : orders, 'orderitems' : orderitems,'order1' : order1, 'itemList' : itemList, 'length' : length, 'newOrderList' : newOrderList})
+  return render(request, 'home.html', {'orders' : orders,
+   'orderitems' : orderitems,'order1' : order1,
+    'itemList' : itemList, 'length' : length,
+     'newOrderList' : newOrderList, 'printmodels': printmodels,
+     'testList': testList, 'testList2': testList2, 'testList3': testList3})
 # return render(request, 'home.html', {'orderItems': orderItems, 'orders': orders} )
 
 def uploadorders(request):
