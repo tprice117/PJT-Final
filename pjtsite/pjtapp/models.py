@@ -16,6 +16,7 @@ class Orders(models.Model):
   RequiredShipDate = models.DateField() #DATE FORMATS NOT ACCEPTED IN MODEL VERSION BUT IN FORMAT IS FINE
   OrderPlatform = models.CharField(max_length=32)
   OrderCompleted = models.BooleanField()
+  
 
 class PrintModels(models.Model): 
   # ModelID = models.AutoField(primary_key=True)
@@ -31,7 +32,7 @@ class OrderItems(models.Model):
 
 class PrintFileData(models.Model): #Need to add PrintFileDataID
   # PrintFileDataID = models.AutoField(primary_key = True)
-  ParentSKU = models.ForeignKey(PrintModels, to_field="ModelSKU", db_column="ParentSKU", on_delete=models.CASCADE)
+  # ParentSKU = models.ForeignKey(PrintModels, to_field="ModelSKU", db_column="ParentSKU", on_delete=models.CASCADE)
   FileName = models.CharField(max_length=128)
   Scope = models.CharField(max_length=48)
   Printer = models.CharField(max_length=48)
