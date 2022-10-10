@@ -5,39 +5,52 @@
   <head>
     <meta charset="utf-8" />
     <title>Test PJT</title>
-    {% comment %} CSS defs {% endcomment %}
-    {% comment %} bootstrap {% endcomment %}
-    {% comment %} <link
+    {% comment %} CSS defs {% endcomment %} {% comment %} bootstrap {%
+    endcomment %} {% comment %}
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
-    /> {% endcomment %}
+    />
+    {% endcomment %}
 
-    <link rel="stylesheet" href="{%static 'litera.css'%}" />
+    <link rel="stylesheet" href="{%static 'style.css'%}" />
     {% comment %} CSS defs {% endcomment %}
   </head>
   <body>
     <h1>Home Page</h1>
     <div class="container-2">
-    {% for j in ojoinoi %}
-      <button type="button" class="collapsible">
-        <div align="right">
-          <a href="details" class="button button2">Order Details</a>
-        </div>
-        {%if j.OrdersID.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
-        OrderID: {{j.OrdersID.OrdersID}}, Full Name: {{ j.OrdersID.FullName}}, Order Date:
-        {{j.OrdersID.SaleDate}}, Ship Date: {{j.OrdersID.RequiredShipDate}} 
-      </button>
-      {% for j in ojoinoi %}
-
-      <div class="content">
-          <p><br>
-          Item SKU: {{j.ItemSKU}}, Item Name: {{j.ItemSKU.ModelName}}, OrderQTY: {{j.OrderQuantity}}
-          </p>
+      {{orders}}
+      <p></p>
+      {{length}}
+      <p></p>
+      {{itemList}}
+      <p></p>
+      {{itemList2}}
+      <p></p>
+      {{orderitems}}
+      <p></p>
+      {{order1}}
+      <p></p>
+      {{newOrderList}}
+    {% for order in newOrderList %}
+    <button type="button" class="collapsible">
+      <div align="right">
+        <a href="details" class="button button2">Order Details</a>
       </div>
-      {% endfor %}
-
+      {%if order.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
+      OrderID: {{order.OrdersID}}, Full Name: {{order.FullName}}, Order Date:
+      {{order.SaleDate}}, Ship Date: {{order.RequiredShipDate}}
+    </button>
+    {% for orderitem in order.itemList%}
+      <div class="content">
+      <p>
+        <br/>
+         Item SKU: {{orderitem.OrderSKU}}, Item Name:, OrderQTY: {{orderitem.OrderQuantity}} 
+      </p>
+      </div>
+      {% endfor %} 
     {% endfor %}
     <script>
       var coll = document.getElementsByClassName("collapsible");
@@ -79,7 +92,6 @@
     </script>
     -->
     {% comment %} {% for j in OrderItemsList %} {% endfor %} {% endcomment %}
-
 
     <div class="container">
       <div class="center">
