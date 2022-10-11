@@ -10,17 +10,16 @@ from django.views.generic.base import TemplateView
 from scripts import orders_load
 from django.views.generic import TemplateView, ListView
 def home(request):
-  orders = list(Orders.objects.values())
+  orders = list(Orders.objects.filter(OrderCompleted=0).values())
   orderitems = list(OrderItems.objects.values())
   printmodels = list(PrintModels.objects.values())
-  i=0
-  j=0
+  i, j = 0, 0
   newOrderList=[]
   testList=[]
   testList3=[]
   testList2=[]
   length = len(orders)
-  while(i < len(orders)-3):
+  while(i < len(orders)):
     itemList = []
 
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
@@ -29,7 +28,6 @@ def home(request):
     while(j < len(orderitems) and orderitems[j]['OrdersID_id'] == orders[i]['OrdersID']):
       
       dictEntry = {
-      'OrdersID':orders[i]['OrdersID'], 
       'OrderSKU': orderitems[i]['ItemSKU_id'],
       'OrderQuantity': orderitems[i]['OrderQuantity']}
 
