@@ -13,37 +13,26 @@ def home(request):
   orders = list(Orders.objects.filter(OrderCompleted=0).values())
   orderitems = list(OrderItems.objects.values())
   printmodels = list(PrintModels.objects.values())
-  i, j = 0, 0
   newOrderList=[]
-  testList=[]
-  testList3=[]
-  testList2=[]
   length = len(orders)
-  while(i < len(orders)):
+  for i in range(len(orders)):
     itemList = []
 
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
     "SaleDate":orders[i]['SaleDate'], "RequiredShipDate":orders[i]['RequiredShipDate']}
-
-    while(j < len(orderitems) and orderitems[j]['OrdersID_id'] == orders[i]['OrdersID']):
-      
+    for j in (list(OrderItems.objects.filter(OrdersID_id = orders[i]['OrdersID']).values())):
       dictEntry = {
       'OrderSKU': orderitems[i]['ItemSKU_id'],
-      'OrderQuantity': orderitems[i]['OrderQuantity']}
-
-      testList.append(printmodels[i]["ModelSKU"])
-      testList3.append(printmodels[j]["ModelSKU"])
-      testList2.append(dictEntry["OrderSKU"])
-
-      for l in range(len(printmodels)):
-        if dictEntry['OrderSKU'] == printmodels[l]['ModelSKU']:
-          dictEntry['ModelName'] = printmodels[l]['ModelName']
+      'OrderQuantity': orderitems[i]['OrderQuantity'],
+      'ModelName': PrintModels.objects.filter(ModelSKU = orderitems[i]['ItemSKU_id']).values_list('ModelName', flat=True).get()}
 
       itemList.append(dictEntry)
-      j+=1
     order1['itemList'] = itemList
     newOrderList.append(order1)
-    i+=1
+
+      # testList.append(printmodels[i]["ModelSKU"])
+      # testList3.append(printmodels[j]["ModelSKU"])
+      # testList2.append(dictEntry["OrderSKU"])
 
     # if (orderitems[i]["OrdersID_id"] == orders[i]["OrdersID"]):
     #   itemList.append(orderitems[i])
@@ -70,13 +59,12 @@ def home(request):
       #   orders[i]["items"] = orderitems
       # if (orders[i]["OrdersID"] == 10761):
       #   orders[i]["OrdersID"] = "f"
+
   return render(request, 'home.html', {'orders' : orders,
    'orderitems' : orderitems,'order1' : order1,
     'itemList' : itemList, 'length' : length,
-     'newOrderList' : newOrderList, 'printmodels': printmodels,
-     'testList': testList, 'testList2': testList2, 'testList3': testList3})
-# return render(request, 'home.html', {'orderItems': orderItems, 'orders': orders} )
-
+     'newOrderList' : newOrderList, 'printmodels': printmodels})
+     
 def uploadorders(request):
   return render(request, 'uploadorders.html')
   
