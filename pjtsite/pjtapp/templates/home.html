@@ -16,6 +16,9 @@
     {% endcomment %}
 
     <link rel="stylesheet" href="{%static 'style.css'%}" />
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     {% comment %} CSS defs {% endcomment %}
   </head>
   <body>
@@ -39,40 +42,35 @@
       <p></p>
 
     {% for order in newOrderList %}
-    <button type="button" class="collapsible">
+    <div data-role="main" class="ui-content">
       <div align="right">
         <a href="details" class="button button2">Order Details</a>
       </div>
+      <div data-role="collapsible">
+ 
+      <h1>
       {%if order.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
       OrderID: {{order.OrdersID}}, Full Name: {{order.FullName}}, Order Date:
       {{order.SaleDate}}, Ship Date: {{order.RequiredShipDate}}
-    </button>
-    {% for orderitem in order.itemList%}
-      <div class="content">
-      <p>
-        <br/>
-         Item SKU: {{orderitem.OrderSKU}}, Item Name: {{orderitem.ModelName}}, 
-         OrderQTY: {{orderitem.OrderQuantity}} 
-      </p>
-      </div>
-      {% endfor %} 
-    {% endfor %}
-    <script>
-      var coll = document.getElementsByClassName("collapsible");
-      var i;
+      </h1>
+      <p></p>
 
-      for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-          this.classList.toggle("active");
-          var content = this.nextElementSibling;
-          if (content.style.display === "block") {
-            content.style.display = "none";
-          } else {
-            content.style.display = "block";
-          }
-        });
-      }
-    </script>
+
+      {% for orderitem in order.itemList%}
+      <div data-role="collapsible">
+        <h1>
+          <p>
+          Item SKU: {{orderitem.OrderSKU}}, Item Name: {{orderitem.ModelName}}, 
+          OrderQTY: {{orderitem.OrderQuantity}} 
+          </p>
+        </h1>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+    
+
+    {% endfor %}
     <!--
     <button type="button" class="collapsible">Open Collapsible</button>
     <div class="content">
