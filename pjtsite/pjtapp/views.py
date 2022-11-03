@@ -18,16 +18,26 @@ def home(request):
   length = len(orders)
   for i in range(len(orders)):
     itemList = []
+    RemPrintTime = 0
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
     "SaleDate":orders[i]['SaleDate'], "RequiredShipDate":orders[i]['RequiredShipDate']}
     for j in list(OrderItems.objects.filter(OrdersID_id = orders[i]['OrdersID']).values()):
+      RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
+      RemPrintTime = sum(RemPrintTime)
+      RemFiles = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id'], PrintFileCompleted = 0).values_list('PrintFileCompleted', flat=True))
+      RemFileSum = RemFiles.count(False)
       dictEntry = {
       'OrderSKU': j['ItemSKU_id'],
       'OrderQuantity': j['OrderQuantity'],
       'ModelName': PrintModels.objects.filter(ModelSKU = j['ItemSKU_id']).values_list('ModelName', flat=True).get(),
       'PrintQuantity':list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintQuantity', flat=True)),
       'PrintWeight':list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintWeight', flat=True)),
-      'PrintTime': list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))}
+      'PrintTime': list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True)),
+      'RemPrinttime': RemPrintTime,
+      'RemFiles': RemFiles,
+      'RemFileSum': RemFileSum}
+      if order1['OrdersID'] == 11461:
+        exampleorder = order1
 # , id = order1['OrdersID']
       itemList.append(dictEntry)
     order1['itemList'] = itemList
@@ -66,7 +76,8 @@ def home(request):
   return render(request, 'home.html', {'orders' : orders,
    'orderitems' : orderitems,'order1' : order1,
     'itemList' : itemList, 'length' : length,
-     'newOrderList' : newOrderList, 'printmodels': printmodels})
+     'newOrderList' : newOrderList, 'printmodels': printmodels, 
+     'exampleorder': exampleorder})
      
 def uploadorders(request):
   return render(request, 'uploadorders.html')
