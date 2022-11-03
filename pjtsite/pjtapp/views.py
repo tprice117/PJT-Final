@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from scripts import orders_load
 from django.views.generic import TemplateView, ListView
+import numpy as np
 def home(request):
   orders = list(Orders.objects.filter(OrderCompleted=0).values())
   orderitems = list(OrderItems.objects.values())
@@ -22,20 +23,32 @@ def home(request):
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
     "SaleDate":orders[i]['SaleDate'], "RequiredShipDate":orders[i]['RequiredShipDate']}
     for j in list(OrderItems.objects.filter(OrdersID_id = orders[i]['OrdersID']).values()):
-      RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
-      RemPrintTime = sum(RemPrintTime)
+      ModelName = PrintModels.objects.filter(ModelSKU = j['ItemSKU_id']).values_list('ModelName', flat=True).get()
+      PrintWeight = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintWeight', flat=True))
+      PrintQuantity = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintQuantity', flat=True))
+      PrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
+      FileTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('FileTime', flat=True))
       RemFiles = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id'], PrintFileCompleted = 0).values_list('PrintFileCompleted', flat=True))
       RemFileSum = RemFiles.count(False)
+      RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
+      RemPrintTime = sum(RemPrintTime)
+      OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
+      # RemTime = (sum(PrintQuantity) - sum(OrderQuantityCompleted)) * FileTime
+
+      # RemTime = (PrintQuantity - sum(RemTime)) * list(PrintFileData.objects.filter(tblOrderItems_ID_id = j['id']).values_list('FileTime', flat=True))
+
       dictEntry = {
       'OrderSKU': j['ItemSKU_id'],
       'OrderQuantity': j['OrderQuantity'],
-      'ModelName': PrintModels.objects.filter(ModelSKU = j['ItemSKU_id']).values_list('ModelName', flat=True).get(),
-      'PrintQuantity':list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintQuantity', flat=True)),
-      'PrintWeight':list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintWeight', flat=True)),
-      'PrintTime': list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True)),
+      'ModelName': ModelName,
+      'PrintQuantity': PrintQuantity,
+      'PrintWeight': PrintWeight,
+      'PrintTime': PrintTime,
       'RemPrinttime': RemPrintTime,
       'RemFiles': RemFiles,
       'RemFileSum': RemFileSum}
+      # 'RemTime': RemTime}
+      
       if order1['OrdersID'] == 11461:
         exampleorder = order1
 # , id = order1['OrdersID']
