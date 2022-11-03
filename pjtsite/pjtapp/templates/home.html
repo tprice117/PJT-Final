@@ -40,6 +40,8 @@
       <p></p>
       {{printmodels}}
       <p></p>
+      {{exampleorder}}
+      <p></p>
 
     {% for order in newOrderList %}
     <div data-role="main" class="ui-content">
@@ -61,7 +63,8 @@
         <h1>
           <p>
           Item SKU: {{orderitem.OrderSKU}}, Item Name: {{orderitem.ModelName}}, 
-          OrderQTY: {{orderitem.OrderQuantity}} 
+          OrderQTY: {{orderitem.OrderQuantity}}, Remaining Files: {{orderitem.RemFileSum}},
+          Remaining Print Time: {{orderitem.RemPrinttime}}
           </p>
         </h1>
       </div>
