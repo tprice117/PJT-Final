@@ -8,7 +8,7 @@ import logging
 
 
 def run():
-  fhand = open('pjtapp/PJT-PrintFileData.csv')
+  fhand = open('datafiles/PJT-PrintFileData.csv')
 
   reader = csv.reader(fhand)
   next(reader)

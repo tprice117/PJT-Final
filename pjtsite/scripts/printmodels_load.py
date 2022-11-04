@@ -7,8 +7,8 @@ import pandas as pd
 import logging
 
 def run():
-  logging.basicConfig(filename='printmodelsload.log', encoding='utf-8', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-  fhand = open('pjtapp/PJT-PrintModels.csv', encoding='latin-1')
+  logging.basicConfig(filename='datafiles/printmodelsload.log', encoding='utf-8', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+  fhand = open('datafiles/PJT-PrintModels.csv', encoding='latin-1')
   #TODO:I have no idea why but i had to change encoding to latin-1 instead of utf-8 to stop an encoding exception 
 
   reader = csv.reader(fhand)

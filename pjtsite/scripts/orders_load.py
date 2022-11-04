@@ -6,7 +6,7 @@ import numpy
 import pandas as pd
 
 def run():
-  fhand = open('pjtapp/PJT-Orders.csv')
+  fhand = open('datafiles/PJT-Orders.csv')
   
   reader = csv.reader(fhand)
   next(reader)

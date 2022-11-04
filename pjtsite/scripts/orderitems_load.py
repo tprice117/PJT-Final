@@ -7,8 +7,8 @@ import pandas as pd
 import logging
 
 def run():
-  logging.basicConfig(filename='orderitemsload.log', encoding='utf-8', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-  fhand = open('pjtapp/PJT-OrderItems.csv')
+  logging.basicConfig(filename='./datafiles/orderitemsload.log', encoding='utf-8', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+  fhand = open('./datafiles/PJT-OrderItems.csv')
   
   reader = csv.reader(fhand)
   next(reader)
