@@ -23,11 +23,13 @@ def home(request):
   # printfiledata = list(PrintFileData.objects.values())
   newOrderList=[]
   length = len(orders)
+
   for i in range(len(orders)):
     itemList = []
     RemPrintTime = 0
     order1 = {"FullName":orders[i]['FullName'], "OrdersID":orders[i]['OrdersID'], 
     "SaleDate":orders[i]['SaleDate'], "RequiredShipDate":orders[i]['RequiredShipDate']}
+
     for j in list(OrderItems.objects.filter(OrdersID_id = orders[i]['OrdersID']).values()):
       ModelName = PrintModels.objects.filter(ModelSKU = j['ItemSKU_id']).values_list('ModelName', flat=True).get()
       PrintWeight = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintWeight', flat=True))
@@ -105,13 +107,29 @@ def uploadprintdata(request):
   return render(request, 'uploadprintdata.html')
   
 def details(request, orderid):
+  newItemList=[]
+
   oid = None
   orderid_list = list(OrderItems.objects.filter(OrdersID_id = orderid).values())
   if len(orderid_list) > 0:
     oid = orderid_list[0]
   else: 
     oid = None
-  return render(request, 'details.html', {"oid": oid})  
+  for item in orderid_list:
+    order_list = list(Orders.objects.filter(OrdersID = orderid).values())
+    item_skus = OrderItems.objects.filter(OrdersID_id = item['OrdersID_id'], ItemSKU = item['ItemSKU_id']).values_list('ItemSKU_id', flat=True).get()
+    item_name = PrintModels.objects.filter(ModelSKU = item['ItemSKU_id']).values_list('ModelName', flat=True).get()
+    file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', flat=True))
+    itemDictEntry = {
+      'item_skus': item_skus,
+      'item_name': item_name,
+      'file_names': file_names
+    }
+    newItemList.append(itemDictEntry)
+
+  return render(request, 'details.html', {'oid': oid, 
+  'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
+  'newItemList': newItemList})  
 
 def summary(request):
   return render(request, 'summary.html')

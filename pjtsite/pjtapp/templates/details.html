@@ -5,15 +5,72 @@
   <head>
     <meta charset="utf-8" />
     <title>Test PJT</title>
+    {% comment %} CSS defs {% endcomment %} {% comment %} bootstrap {%
+    endcomment %} {% comment %}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    {% endcomment %}
+
     <link rel="stylesheet" href="{%static 'style.css'%}" />
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   </head>
   <body>
+    <style>
+      #footer {
+        position: fixed;
+        padding: 10px 10px 20px 0px;
+        text-align: center;
+        bottom: 0;
+        width: 100%;
+
+        height: 40px;
+        background: grey;
+      }
+    </style>
+
     <h1>Details</h1>
-    {% if oid != None %}
-    <tr>
-      <td>ID:</td>
-      <td>{{oid}}</td>
-    </tr>
-    {%endif%}
+    <div class="container-2">
+      {% if oid != None %} {% for i in newItemList %}
+      <div data-role="main" class="ui-content">
+        <div data-role="collapsible">
+          <tr>
+            <h1>ItemSKU:{{i.item_skus}}, {{i.item_name}}</h1>
+          </tr>
+          {% comment %} {% for j in newItemList%} {% endcomment %}
+          <p>{{i.file_names}}</p>
+          <br />
+          {% comment %} {%endfor%} {% endcomment %}
+        </div>
+      </div>
+      {%endfor%} {%endif%}
+    </div>
+
+    <td>
+      oid <br />
+      {{oid}}
+    </td>
+    <br />
+    <br />
+    <td>order_list <br />{{order_list}}</td>
+    <br />
+    <br />
+    <td>
+      orderid_list <br />
+      {{orderid_list}}
+    </td>
+    <br />
+    <td>
+      newItemList <br />
+      {{newItemList}}
+    </td>
   </body>
 </html>
