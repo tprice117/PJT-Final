@@ -22,6 +22,18 @@
     {% comment %} CSS defs {% endcomment %}
   </head>
   <body>
+    <style>
+      #footer {
+          position: fixed;
+          padding: 10px 10px 20px 0px;
+          text-align: center;
+          bottom: 0;
+          width: 100%;
+
+          height: 40px;
+          background: grey;
+      }
+  </style>
     <h1>Home Page</h1>
     <div class="container-2">
       {% comment %} {{orders}}
@@ -98,14 +110,12 @@
     </script>
     -->
     {% comment %} {% for j in OrderItemsList %} {% endfor %} {% endcomment %}
-
-    <div class="container">
-      <div class="center">
+    
+      <div id="footer">
         <a href="uploadorders" class="button">Upload new Orders</a>
         <a href="uploadprintdata" class="button">Upload new Print Models</a>
         <a href="details" class="button">Order Details</a>
         <a href="summary" class="button">Order Summary</a>
       </div>
-    </div>
   </body>
 </html>
