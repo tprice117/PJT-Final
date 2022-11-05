@@ -10,11 +10,17 @@ from django.views.generic.base import TemplateView
 from scripts import orders_load
 from django.views.generic import TemplateView, ListView
 import numpy as np
+
+orders = list(Orders.objects.filter(OrderCompleted=0).values())
+orderitems = list(OrderItems.objects.values())
+printmodels = list(PrintModels.objects.values())
+printfiledata = list(PrintFileData.objects.values())
+
 def home(request):
-  orders = list(Orders.objects.filter(OrderCompleted=0).values())
-  orderitems = list(OrderItems.objects.values())
-  printmodels = list(PrintModels.objects.values())
-  printfiledata = list(PrintFileData.objects.values())
+  # orders = list(Orders.objects.filter(OrderCompleted=0).values())
+  # orderitems = list(OrderItems.objects.values())
+  # printmodels = list(PrintModels.objects.values())
+  # printfiledata = list(PrintFileData.objects.values())
   newOrderList=[]
   length = len(orders)
   for i in range(len(orders)):
@@ -48,7 +54,7 @@ def home(request):
       'RemFiles': RemFiles,
       'RemFileSum': RemFileSum}
       # 'RemTime': RemTime}
-      
+
       if order1['OrdersID'] == 11461:
         exampleorder = order1
 # , id = order1['OrdersID']
@@ -98,13 +104,18 @@ def uploadorders(request):
 def uploadprintdata(request):
   return render(request, 'uploadprintdata.html')
   
-def details(request):
-  return render(request, 'details.html')  
+def details(request, orderid):
+  oid = None
+  orderid_list = list(OrderItems.objects.filter(OrdersID_id = orderid).values())
+  if len(orderid_list) > 0:
+    oid = orderid_list[0]
+  else: 
+    oid = None
+  return render(request, 'details.html', {"oid": oid})  
 
 def summary(request):
   return render(request, 'summary.html')
 # 2343347323	Shingo Sakurai	Shingo	Sakurai
-
 
 # def OrderItems(request):
 #   OrderItemsList = OrderItems.objects.all()

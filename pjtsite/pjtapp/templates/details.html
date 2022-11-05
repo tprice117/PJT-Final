@@ -9,5 +9,11 @@
   </head>
   <body>
     <h1>Details</h1>
+    {% if oid != None %}
+    <tr>
+      <td>ID:</td>
+      <td>{{oid}}</td>
+    </tr>
+    {%endif%}
   </body>
 </html>
