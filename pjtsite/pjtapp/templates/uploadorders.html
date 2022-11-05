@@ -6,22 +6,25 @@
     <meta charset="utf-8" />
     <title>Test PJT</title>
     <link rel="stylesheet" href="{%static 'style.css'%}" />
+    <script 
+    src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+    crossorigin="anonymous">
+    </script>
   </head>
   <body>
     <h1>Upload Orders</h1>
     <div class="container-2"> 
-      <form>
-        <div class="box-1">
-          <label for "ordersfile">Select an Orders CSV File:</label>
-          <input type="file" id="ordersfile" name="ordersfile" accept=".csv">
-        </div>
-        <div class="box-2">
-          <label for "orderitemsfile">Select an Order Items CSV File:</label>
-          <input type="file" id="orderitemsfile" name="orderitemsfile" accept=".csv">
-        </div>
-        <div class="box-3">
-          <input type= "submit" name = submit value = "Submit"/>
-      </form>
+      <div class="box-1">
+        <label for "ordersfile">Select an Orders CSV File:</label>
+        <input type="file" id="ordersfile" name="ordersfile" accept=".csv">
+      </div>
+      <div class="box-2">
+        <label for "orderitemsfile">Select an Order Items CSV File:</label>
+        <input type="file" id="orderitemsfile" name="orderitemsfile" accept=".csv">
+      </div>
+      <div class="box-3">
+        <input type= "submit" name = submit value = "Submit"/>
     </div>
     </div>
   </body>

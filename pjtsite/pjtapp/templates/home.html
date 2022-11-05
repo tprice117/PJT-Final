@@ -24,7 +24,7 @@
   <body>
     <h1>Home Page</h1>
     <div class="container-2">
-      {{orders}}
+      {% comment %} {{orders}}
       <p></p>
       {{length}}
       <p></p>
@@ -41,12 +41,12 @@
       {{printmodels}}
       <p></p>
       {{exampleorder}}
-      <p></p>
+      <p></p> {% endcomment %}
 
     {% for order in newOrderList %}
     <div data-role="main" class="ui-content">
       <div align="right">
-        <a href="details" class="button button2">Order Details</a>
+        <a href="details/{{order.OrdersID}}" class="button button2">Order Details</a>
       </div>
       <div data-role="collapsible">
  
