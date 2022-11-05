@@ -45,10 +45,10 @@
           <tr>
             <h1>ItemSKU:{{i.item_skus}}, {{i.item_name}}</h1>
           </tr>
-          {% comment %} {% for j in newItemList%} {% endcomment %}
-          <p>{{i.file_names}}</p>
+          {% for j in i.file_names%}
+          <p>{{j}}, {{i.file_colors}}</p>
           <br />
-          {% comment %} {%endfor%} {% endcomment %}
+          {%endfor%}
         </div>
       </div>
       {%endfor%} {%endif%}

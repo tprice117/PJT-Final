@@ -120,10 +120,13 @@ def details(request, orderid):
     item_skus = OrderItems.objects.filter(OrdersID_id = item['OrdersID_id'], ItemSKU = item['ItemSKU_id']).values_list('ItemSKU_id', flat=True).get()
     item_name = PrintModels.objects.filter(ModelSKU = item['ItemSKU_id']).values_list('ModelName', flat=True).get()
     file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', flat=True))
+    file_colors = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('Color', flat=True))
     itemDictEntry = {
       'item_skus': item_skus,
       'item_name': item_name,
-      'file_names': file_names
+      'file_names': file_names,
+      'file_colors': file_colors
+
     }
     newItemList.append(itemDictEntry)
 
