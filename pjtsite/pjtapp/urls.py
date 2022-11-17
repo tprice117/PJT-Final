@@ -16,7 +16,6 @@ urlpatterns = [
     path('uploadorders/', views.uploadorders, name="uploadorders"),
     path('uploadprintdata/', views.uploadprintdata, name="uploadprintdata"),
     url(r'^details/(?P<orderid>\w+)/$', views.details, name="details"),
-    path('summary/', views.summary, name="summary"),
 
 
 ]

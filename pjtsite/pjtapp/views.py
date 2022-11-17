@@ -8,7 +8,9 @@ from .models import OrderItems
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from scripts import orders_load
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, UpdateView
+from django.db.models import Count, Sum, Avg
+
 import numpy as np
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
@@ -41,10 +43,14 @@ def home(request):
       RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
       RemPrintTime = sum(RemPrintTime)
       OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
+      ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color')).order_by('count'))
+      ColorWeight = list(PrintFileData.objects.filter(Color__exact = ColorCount).values('FileWeight'))
+
       # RemTime = (sum(PrintQuantity) - sum(OrderQuantityCompleted)) * FileTime
-
       # RemTime = (PrintQuantity - sum(RemTime)) * list(PrintFileData.objects.filter(tblOrderItems_ID_id = j['id']).values_list('FileTime', flat=True))
-
+      # FileColor = PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color', 'PrintQuantity', 'FileTime').order_by('Color')
+      # FileCount = list(PrintFileData.objects.filter(Color = j[FileColor]).values_list('PrintQuantity', flat=True))
+     
       dictEntry = {
       'OrderSKU': j['ItemSKU_id'],
       'OrderQuantity': j['OrderQuantity'],
@@ -54,51 +60,22 @@ def home(request):
       'PrintTime': PrintTime,
       'RemPrinttime': RemPrintTime,
       'RemFiles': RemFiles,
-      'RemFileSum': RemFileSum}
+      'RemFileSum': RemFileSum,
+      'ColorCount': ColorCount,
+      'ColorWeight': ColorWeight}
       # 'RemTime': RemTime}
 
-      if order1['OrdersID'] == 11461:
-        exampleorder = order1
-# , id = order1['OrdersID']
+      # if order1['OrdersID'] == 11461:
+      #   exampleorder = order1
       itemList.append(dictEntry)
     order1['itemList'] = itemList
     newOrderList.append(order1)
 
-      # testList.append(printmodels[i]["ModelSKU"])
-      # testList3.append(printmodels[j]["ModelSKU"])
-      # testList2.append(dictEntry["OrderSKU"])
-
-    # if (orderitems[i]["OrdersID_id"] == orders[i]["OrdersID"]):
-    #   itemList.append(orderitems[i])
-
-      
-  #     {'FirstName': 'Shingo',
-  #   'FullName': 'Shingo Sakurai',
-  #   'LastName': 'Sakurai',
-  #   'OrderCompleted': False,
-  #   'OrderPlatform': 'Etsy',
-  #   'OrdersID': 2343347323,
-  #   'RequiredShipDate': datetime.date(2022, 1, 26),
-  #   'SaleDate': datetime.date(2022, 1, 12)},
-
-      # orders[i]["OrdersID"] = "h"
-      # orderid = orders[i]["OrdersID"]
-      # if orderitems[i] == orders[i]["OrdersID"]:
-      #   orderitems = orderitems.filter(OrdersID__exact=orders[i]["OrdersID"])
-      # orders[i]["items"] = orderitems[i]
-
-      # if orderitems[i] == orders[i]["OrdersID"]:
-      #   orders[i]["items"] = OrderItems[i]
-      # if orders[i]["OrdersID"] == orderitems["OrdersID_id"]:
-      #   orders[i]["items"] = orderitems
-      # if (orders[i]["OrdersID"] == 10761):
-      #   orders[i]["OrdersID"] = "f"
-
   return render(request, 'home.html', {'orders' : orders,
    'orderitems' : orderitems,'order1' : order1,
     'itemList' : itemList, 'length' : length,
-     'newOrderList' : newOrderList, 'printmodels': printmodels, 
-     'exampleorder': exampleorder})
+     'newOrderList' : newOrderList, 'printmodels': printmodels,})
+    #  'exampleorder': exampleorder})
      
 def uploadorders(request):
   return render(request, 'uploadorders.html')
@@ -108,34 +85,36 @@ def uploadprintdata(request):
   
 def details(request, orderid):
   newItemList=[]
-
   oid = None
   orderid_list = list(OrderItems.objects.filter(OrdersID_id = orderid).values())
   if len(orderid_list) > 0:
     oid = orderid_list[0]
   else: 
     oid = None
+  file_color_dict = {}
   for item in orderid_list:
+    
     order_list = list(Orders.objects.filter(OrdersID = orderid).values())
     item_skus = OrderItems.objects.filter(OrdersID_id = item['OrdersID_id'], ItemSKU = item['ItemSKU_id']).values_list('ItemSKU_id', flat=True).get()
     item_name = PrintModels.objects.filter(ModelSKU = item['ItemSKU_id']).values_list('ModelName', flat=True).get()
-    file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', flat=True))
+    file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', 'Color', 'FileWeight', 'FileTime', 'PrintQuantity', 'PrintWeight', 'PrintTime'))
+    
     file_colors = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('Color', flat=True))
     itemDictEntry = {
       'item_skus': item_skus,
       'item_name': item_name,
       'file_names': file_names,
       'file_colors': file_colors
-
     }
+    # file_color_dict[file_names].append(file_colors)
     newItemList.append(itemDictEntry)
-
+  # for i in itemDictEntry[file_names]:
+  #   file_color_dict[file_names]
   return render(request, 'details.html', {'oid': oid, 
   'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
   'newItemList': newItemList})  
 
-def summary(request):
-  return render(request, 'summary.html')
+
 # 2343347323	Shingo Sakurai	Shingo	Sakurai
 
 # def OrderItems(request):

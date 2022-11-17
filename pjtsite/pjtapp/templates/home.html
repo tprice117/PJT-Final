@@ -16,26 +16,53 @@
     {% endcomment %}
 
     <link rel="stylesheet" href="{%static 'style.css'%}" />
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"
+    />
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+      .home-content-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+      }
+      #footer {
+        position: fixed;
+        padding: 10px 10px 20px 0px;
+        text-align: center;
+        bottom: 0;
+        width: 100%;
+
+        height: 40px;
+        background: grey;
+      }
+      th {
+        text-align: center;
+      }
+      td {
+        background-color: #dbedfe;
+        padding-left: 40px;
+        padding-right: 40px;
+        border-radius: 10px;
+      }
+      .main-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 200px;
+        height: 80px;
+        border: 1px solid gray;
+      }
+    </style>
     {% comment %} CSS defs {% endcomment %}
   </head>
   <body>
-    <style>
-      #footer {
-          position: fixed;
-          padding: 10px 10px 20px 0px;
-          text-align: center;
-          bottom: 0;
-          width: 100%;
-
-          height: 40px;
-          background: grey;
-      }
-  </style>
     <h1>Home Page</h1>
+    
     <div class="container-2">
+      
       {% comment %} {{orders}}
       <p></p>
       {{length}}
@@ -46,46 +73,96 @@
       <p></p>
       {{orderitems}}
       <p></p>
-      {{order1}}
-      <p></p>
-      {{newOrderList}}
-      <p></p>
-      {{printmodels}}
+      {{order1}} {{printmodels}}
       <p></p>
       {{exampleorder}}
+      <p></p>
+      {% endcomment %} 
+      {% comment %} <p></p>
+      {{newOrderList}}
       <p></p> {% endcomment %}
-
+    
     {% for order in newOrderList %}
-    <div data-role="main" class="ui-content">
+
+    <div data-role="main-container" class="ui-content">
       <div align="right">
         <a href="details/{{order.OrdersID}}" class="button button2">Order Details</a>
       </div>
       <div data-role="collapsible">
- 
-      <h1>
-      {%if order.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
-      OrderID: {{order.OrdersID}}, Full Name: {{order.FullName}}, Order Date:
-      {{order.SaleDate}}, Ship Date: {{order.RequiredShipDate}}
-      </h1>
-      <p></p>
-
-
-      {% for orderitem in order.itemList%}
-      <div data-role="collapsible">
         <h1>
-          <p>
-          Item SKU: {{orderitem.OrderSKU}}, Item Name: {{orderitem.ModelName}}, 
-          OrderQTY: {{orderitem.OrderQuantity}}, Remaining Files: {{orderitem.RemFileSum}},
-          Remaining Print Time: {{orderitem.RemPrinttime}}
-          </p>
-        </h1>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-    
+        <table class="details-content-table">
+          <th>Order ID</th>
+          <th>Customer Name</th>
+          <th>Order Date</th>
+          <th>Ship Date</th>
+          <tr>
+            <td>{{order.OrdersID}} </td>
+            <td>{{order.FullName}}</td>
+            <td>{{order.SaleDate}}</td>
+            <td>{{order.RequiredShipDate}}</td>
+          </tr>
+        {% comment %} <h1>
+          <tbody class="table-body">
+          {%if order.OrderCompleted == 0%} <input type="checkbox" />{% endif %}
+          {{order.OrdersID}}, Full Name: {{order.FullName}}, Order
+          Date: {{order.SaleDate}}, Ship Date: {{order.RequiredShipDate}}
+          </tbody>
+        </h1> {% endcomment %}
 
+      </table>
+    </h1>
+
+        {% for orderitem in order.itemList%}
+
+        <div data-role="collapsible">
+              <h1>
+              <table class="home-content-table">
+                <th>OrderSKU</th>
+                <th>ModelName</th>
+                <th>OrderQuantity</th>
+                <th>RemFiles</th>
+                <th>RemPrinttime</th>
+                <th>
+                <tr>
+                  <td>{{orderitem.OrderSKU}} </td>
+                  <td>{{orderitem.ModelName}}</td>
+                  <td>{{orderitem.OrderQuantity}}</td>
+                  <td>{{orderitem.RemFileSum}}</td>
+                  <td>{{orderitem.RemPrinttime}}</td>
+                </tr>
+              </table>
+              </h1>
+        
+          <table class="home-content-table">
+            <thead>
+            <th>
+              Color
+            </th>
+            <th>Count</th>
+            <th>PrintQuant</th>
+          </thead>
+            {%for iteminfo in orderitem.ColorCount%}
+            <tr>
+              <td>
+              {{iteminfo.Color}},
+              </td>
+              <td>
+              {{iteminfo.count}}
+              </td>
+              <td>
+              {{iteminfo.PrintQuantity}}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        
+        {% endfor %}
+      </div>
+    </div>
+    
     {% endfor %}
+
     <!--
     <button type="button" class="collapsible">Open Collapsible</button>
     <div class="content">
@@ -110,12 +187,13 @@
     </script>
     -->
     {% comment %} {% for j in OrderItemsList %} {% endfor %} {% endcomment %}
-    
-      <div id="footer">
-        <a href="uploadorders" class="button">Upload new Orders</a>
-        <a href="uploadprintdata" class="button">Upload new Print Models</a>
-        <a href="details" class="button">Order Details</a>
-        <a href="summary" class="button">Order Summary</a>
-      </div>
   </body>
+  </div>
+
+    <div id="footer">
+      <a href="uploadorders" class="button">Upload new Orders</a>
+      <a href="uploadprintdata" class="button">Upload new Print Models</a>
+      <a href="details" class="button">Order Details</a>
+      <a href="/" class="button">Order Summary</a>
+    </div>
 </html>
