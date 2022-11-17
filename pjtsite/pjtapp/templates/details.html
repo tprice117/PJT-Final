@@ -1,3 +1,12 @@
+<?php
+$conn = pg_connect("localhost 5432 postgres");
+if($conn === false){
+  die("ERROR: Could not connect. " 
+              . pg_connect_error());
+}
+echo "hi";
+?>
+
 {% load static from static %}
 
 <!DOCTYPE html>
@@ -22,9 +31,12 @@
     />
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-  </head>
-  <body>
     <style>
+      .details-content-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+      }
       #footer {
         position: fixed;
         padding: 10px 10px 20px 0px;
@@ -35,23 +47,139 @@
         height: 40px;
         background: grey;
       }
-    </style>
+      th{
+        text-align: center;
+      }
+      td {
+        background-color: #dbedfe;
+        padding-left: 40px;
+        padding-right: 40px;
+        border-radius: 10px;
+      }
+      .plus-minus-input {
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+      }
 
+      .plus-minus-input .input-group-field {
+        text-align: center;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        padding: 1rem;
+      }
+
+      .plus-minus-input .input-group-field::-webkit-inner-spin-button,
+      .plus-minus-input .input-group-field ::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+                appearance: none;
+      }
+
+      .plus-minus-input .input-group-button .circle {
+        border-radius: 50%;
+        padding: 0.25em 0.8em;
+      }
+
+
+    </style>
+    
+  </head>
+  <body>
+    <script>
+      jQuery(document).ready(function(){
+        // This button will increment the value
+        $('[data-quantity="plus"]').click(function(e){
+            // Stop acting like a button
+            e.preventDefault();
+            // Get the field name
+            fieldName = $(this).attr('data-field');
+            // Get its current value
+            var currentVal = parseInt($('input[name='+fieldName+']').val());
+            // If is not undefined
+            if (!isNaN(currentVal)) {
+                // Increment
+                $('input[name='+fieldName+']').val(currentVal + 1);
+            } else {
+                // Otherwise put a 0 there
+                $('input[name='+fieldName+']').val(0);
+            }
+        });
+        // This button will decrement the value till 0
+        $('[data-quantity="minus"]').click(function(e) {
+            // Stop acting like a button
+            e.preventDefault();
+            // Get the field name
+            fieldName = $(this).attr('data-field');
+            // Get its current value
+            var currentVal = parseInt($('input[name='+fieldName+']').val());
+            // If it isn't undefined or its greater than 0
+            if (!isNaN(currentVal) && currentVal > 0) {
+                // Decrement one
+                $('input[name='+fieldName+']').val(currentVal - 1);
+            } else {
+                // Otherwise put a 0 there
+                $('input[name='+fieldName+']').val(0);
+            }
+        });
+      });
+    
+    
+    </script>
     <h1>Details</h1>
     <div class="container-2">
       {% if oid != None %} {% for i in newItemList %}
       <div data-role="main" class="ui-content">
         <div data-role="collapsible">
-          <tr>
+          <h1>
+          <table class="home-content-table">
+            <th>Item SKU</th>
+            <th>Item Name</th>
+            <tr>
+              <td>{{i.item_skus}}</td>
+              <td>{{i.item_name}}</td>
+            </tr>
+          </table>
+          </h1>
+          {% comment %} <tr>
             <h1>ItemSKU:{{i.item_skus}}, {{i.item_name}}</h1>
-          </tr>
+          </tr> {% endcomment %}
+          <table class="details-content-table">
+          <th>Complete Order</th>
+          <th>FileName</th>
+          <th>Color</th>
+          <th>FileWeight</th>
+          <th>FileTime</th>
+          <th>PQuant</th>
+          <th>PWeight</th>
+          <th>PTime</th>
+          <th>Files Completed</th>
           {% for j in i.file_names%}
-          <p>{{j}}, {{i.file_colors}}</p>
-          <br />
+          
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>{{j.0}}</td>
+                <td>{{j.1}}</td>
+                <td>{{j.2}}</td>
+                <td>{{j.3}}</td>
+                <td>{{j.4}}</td>
+                <td>{{j.5}}</td>
+                <td>{{j.6}}</td>
+                <td>
+                  <input type="number" min="1" >
+
+                </td>
+              </tr>
+            </th>
           {%endfor%}
+          <td><button class="submit">Submit Changes</button></td>
+
+        </table>
+
         </div>
       </div>
+      
       {%endfor%} {%endif%}
+      
     </div>
 
     <td>
@@ -72,5 +200,15 @@
       newItemList <br />
       {{newItemList}}
     </td>
+    {% comment %} <td>
+      file_colors_dict <br />
+      {{file_colors_dict}}
+    </td> {% endcomment %}
+    <div id="footer">
+      <a href="uploadorders" class="button">Upload new Orders</a>
+      <a href="uploadprintdata" class="button">Upload new Print Models</a>
+      <a href="details" class="button">Order Details</a>
+      <a href="/" class="button">Order Summary</a>
+    </div>
   </body>
 </html>
