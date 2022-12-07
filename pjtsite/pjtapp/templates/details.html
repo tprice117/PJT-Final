@@ -206,7 +206,7 @@ echo "hi";
     </td> {% endcomment %}
     <div id="footer">
       <a href="uploadorders" class="button">Upload new Orders</a>
-      <a href="uploadprintdata" class="button">Upload new Print Models</a>
+      {% comment %} <a href={%url 'update_Object' oid.id%} class="button">Upload new Print Models</a> {% endcomment %}
       <a href="details" class="button">Order Details</a>
       <a href="/" class="button">Order Summary</a>
     </div>
