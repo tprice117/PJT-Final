@@ -2,6 +2,8 @@ from pipes import Template
 from typing import OrderedDict
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+from django.shortcuts import redirect
+
 from django import template
 from .models import *
 from .models import OrderItems
@@ -10,7 +12,7 @@ from django.views.generic.base import TemplateView
 from scripts import orders_load
 from django.views.generic import TemplateView, ListView, UpdateView
 from django.db.models import Count, Sum, Avg
-
+from .forms import ObjectForm
 import numpy as np
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
@@ -43,7 +45,9 @@ def home(request):
       RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
       RemPrintTime = sum(RemPrintTime)
       OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
-      ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color')).order_by('count'))
+
+      ## TODO - FIX values summing object weight and time left as well as "remaining fields" ## 
+      ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'), ).order_by())
       ColorWeight = list(PrintFileData.objects.filter(Color__exact = ColorCount).values('FileWeight'))
 
       # RemTime = (sum(PrintQuantity) - sum(OrderQuantityCompleted)) * FileTime
@@ -114,7 +118,17 @@ def details(request, orderid):
   'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
   'newItemList': newItemList})  
 
-
+def updateObject(request, pk):
+  object = PrintFileData.objects.get(id = pk)
+  form = ObjectForm(instance=object)
+  if request.method == 'POST':
+    form = ObjectForm(request.POST, instance=object)
+    if form.is_valid():
+      form.save()
+      return redirect('/')
+  context = {'form':form}
+  return render(request, 'details.html', context)
+  
 # 2343347323	Shingo Sakurai	Shingo	Sakurai
 
 # def OrderItems(request):

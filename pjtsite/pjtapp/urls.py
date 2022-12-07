@@ -17,6 +17,7 @@ urlpatterns = [
     path('uploadprintdata/', views.uploadprintdata, name="uploadprintdata"),
     url(r'^details/(?P<orderid>\w+)/$', views.details, name="details"),
 
+    path('update_object/<str:pk>/', views.updateObject, name="update_Object")
 
 ]
 

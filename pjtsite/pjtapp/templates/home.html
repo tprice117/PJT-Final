@@ -55,6 +55,13 @@
         height: 80px;
         border: 1px solid gray;
       }
+      #rcorners1 {
+        border-radius: 25px;
+        background: #dbedfe;
+        padding: 30px;
+        width: 200px;
+        height: 150px;
+      }
     </style>
     {% comment %} CSS defs {% endcomment %}
   </head>
@@ -86,7 +93,7 @@
 
     <div data-role="main-container" class="ui-content">
       <div align="right">
-        <a href="details/{{order.OrdersID}}" class="button button2">Order Details</a>
+        <a href="details/{{order.OrdersID}}" id="rcorners1">Order Details</a>
       </div>
       <div data-role="collapsible">
         <h1>
@@ -138,8 +145,12 @@
             <th>
               Color
             </th>
-            <th>Count</th>
-            <th>PrintQuant</th>
+            <th>FileCount</th>
+            <th>TotalWeight</th>
+            <th>TotalTime</th>
+            <th>RemQuant</th>
+            <th>RemWeight</th>
+            <th>RemTime</th>
           </thead>
             {%for iteminfo in orderitem.ColorCount%}
             <tr>
@@ -150,7 +161,10 @@
               {{iteminfo.count}}
               </td>
               <td>
-              {{iteminfo.PrintQuantity}}
+              {{iteminfo.weightSum}}
+              </td>
+              <td>
+              {{iteminfo.timeSum}}
               </td>
             </tr>
             {% endfor %}
