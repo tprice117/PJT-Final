@@ -17,9 +17,14 @@ def run():
   PrintModels.objects.all().delete()
   PrintFileStatus.objects.all().delete()
   
+  print('orders')
   orders_load.run()
+  print('printmodels')
   printmodels_load.run()
+  print('orderitems')
   orderitems_load.run()
+  print('printfiledata')
   printfiledata_load.run()
+  print('printfilestatus')
   printfilestatus_init.run()
 

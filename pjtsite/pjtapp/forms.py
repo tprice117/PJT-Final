@@ -1,8 +1,15 @@
 from django.forms import ModelForm
 from .models import *
+from django import forms
 
 
-class ObjectForm(ModelForm):
+class ObjectForm(forms.ModelForm):
     class Meta:
-        model = PrintFileData
-        fields = '__all__'
+        model = PrintFileStatus
+        fields = ['PrintFileCompleted', 'OrderQuantityCompleted']
+        
+
+
+# class UserInfoForm(forms.Form):
+#     name = forms.CharField()
+#     email = forms.EmailField()

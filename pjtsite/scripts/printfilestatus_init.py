@@ -13,18 +13,23 @@ def run():
   printfiledata = list(PrintFileData.objects.values())
   #PrintFileData.objects.filter(ParentSKU = orderitems[row]['ItemSKU_id']).values_list('ParentSKU', flat=True).get()
 
-  for row in range(len(orderitems)):
-    print(row)
-    oi = orderitems[row]['id']
-    qspfd = PrintFileData.objects.filter(ParentSKU = orderitems[row]['ItemSKU_id']).values_list()
-    for rec in range(len(qspfd)):
+  for row in orderitems:
+    
+    oi = row['id']
+    print("new row", row, oi)
+    qspfd = PrintFileData.objects.filter(ParentSKU = row['ItemSKU_id']).values()
+    print(qspfd)
+
+    for rec in qspfd:
+      # if (row == 2):
+      #   print(rec, 'id', qspfd[rec])
     # for rec in range(len(printfiledata)):
       # oisku, created = OrderItems.objects.get(ItemSKU = i[1])
       pfs = PrintFileStatus(
-      ItemSKU = orderitems[rec]['ItemSKU_id'],
+      ItemSKU = rec['ParentSKU_id'],
       OrderQuantityCompleted = 0,
       PrintFileCompleted = 0,
       tblOrderItems_ID_id = oi,
-      tblPrintFileData_ID_id = printfiledata[rec]['id']
+      tblPrintFileData_ID_id = rec['id']
       ) 
       pfs.save()

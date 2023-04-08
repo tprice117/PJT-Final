@@ -1,0 +1,12 @@
+{%block title%}EDIT POST{% endblock %}
+<!DOCTYPE html>
+<html>
+  <form class="form-group">
+    {%csrf_token%}
+    {{form.as_p}}
+    <button class="btn btn-secondary">Post</button>
+  </form>
+
+</html>
+
+
