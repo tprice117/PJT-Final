@@ -3,6 +3,7 @@ from typing import OrderedDict
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import redirect
+from django.forms import formset_factory
 
 from django import template
 from .models import *
@@ -19,6 +20,7 @@ orders = list(Orders.objects.filter(OrderCompleted=0).values())
 orderitems = list(OrderItems.objects.values())
 printmodels = list(PrintModels.objects.values())
 printfiledata = list(PrintFileData.objects.values())
+printfilestatus = list(PrintFileStatus.objects.values())
 
 def home(request):
   # orders = list(Orders.objects.filter(OrderCompleted=0).values())
@@ -88,6 +90,13 @@ def uploadprintdata(request):
   return render(request, 'uploadprintdata.html')
   
 def details(request, orderid):
+  # if request.method == "POST":
+  #   print(request.POST)
+
+  #   if request.POST.get("save"):
+  #   for item in printfiledata.all():
+  #     if request.POST.get()
+  listCount = 0
   newItemList=[]
   oid = None
   orderid_list = list(OrderItems.objects.filter(OrdersID_id = orderid).values())
@@ -104,31 +113,65 @@ def details(request, orderid):
     file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', 'Color', 'FileWeight', 'FileTime', 'PrintQuantity', 'PrintWeight', 'PrintTime'))
     
     file_colors = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('Color', flat=True))
+    pfsdata = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = item['id']).values())
+    concList = zip(file_names, pfsdata)
+
+
     itemDictEntry = {
       'item_skus': item_skus,
       'item_name': item_name,
       'file_names': file_names,
-      'file_colors': file_colors
+      'file_colors': file_colors,
+      'pfsdata' : pfsdata,
+      'concList' : concList,
     }
+
     # file_color_dict[file_names].append(file_colors)
     newItemList.append(itemDictEntry)
   # for i in itemDictEntry[file_names]:
   #   file_color_dict[file_names]
+  # CompletedFiles = request.POST['CompletedFiles']
+  if request.method == "POST":
+    # newFile = PrintFileStatus()
+    nID = request.POST.get('fileID')
+    #store new completed files in newFile
+    nCompletedFiles = request.POST.get('CompletedFiles')
+    newFile = PrintFileStatus.objects.get(id=nID)
+    newFile.OrderQuantityCompleted = nCompletedFiles
+    newFile.save()
+    #retrieve all previous file objects
+    
+
+    newFile.save()
+
   return render(request, 'details.html', {'oid': oid, 
   'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
-  'newItemList': newItemList})  
+  'newItemList': newItemList, 'printfilestatus': printfilestatus, 'pfsdata': pfsdata,
+  'listCount': listCount})  
 
-def updateObject(request, pk):
-  object = PrintFileData.objects.get(id = pk)
-  form = ObjectForm(instance=object)
-  if request.method == 'POST':
-    form = ObjectForm(request.POST, instance=object)
-    if form.is_valid():
-      form.save()
-      return redirect('/')
-  context = {'form':form}
-  return render(request, 'details.html', context)
+
+
+def detailsUpdate(request, filename):
+  return render(request, 'detailsUpdate.html')
+
+
+
+# def updateObject(request, pk):
+#   object = PrintFileData.objects.get(id = pk)
+#   form = ObjectForm(instance=object)
+#   if request.method == 'POST':
+#     form = ObjectForm(request.POST, instance=object)
+#     if form.is_valid():
+#       form.save()
+#       return redirect('/')
+#   context = {'form':form}
+#   return render(request, 'details.html', context)
   
+def details2(request):
+  model = PrintFileData
+  template_name = 'details2.html'
+  fields = ['FileName']
+  return render(request, 'details2.html')
 # 2343347323	Shingo Sakurai	Shingo	Sakurai
 
 # def OrderItems(request):

@@ -1,3 +1,4 @@
+
 <?php
 $conn = pg_connect("localhost 5432 postgres");
 if($conn === false){
@@ -8,7 +9,6 @@ echo "hi";
 ?>
 
 {% load static from static %}
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -138,12 +138,16 @@ echo "hi";
               <td>{{i.item_skus}}</td>
               <td>{{i.item_name}}</td>
             </tr>
+            
           </table>
+          <td>{{pfsdata.0}}</td>
+
           </h1>
           {% comment %} <tr>
             <h1>ItemSKU:{{i.item_skus}}, {{i.item_name}}</h1>
           </tr> {% endcomment %}
-          <table class="details-content-table">
+          <table style="width:100%" class="details-content-table">
+            
           <th>Complete Order</th>
           <th>FileName</th>
           <th>Color</th>
@@ -152,27 +156,37 @@ echo "hi";
           <th>PQuant</th>
           <th>PWeight</th>
           <th>PTime</th>
-          <th>Files Completed</th>
-          {% for j in i.file_names%}
+          <th style="width:80%">Files Completed</th>
+          {% comment %} {% for a,b in i.concList %} {% endcomment %}
           
+          {%for a,b in i.concList %}
               <tr>
-                <td><input type="checkbox" /></td>
-                <td>{{j.0}}</td>
-                <td>{{j.1}}</td>
-                <td>{{j.2}}</td>
-                <td>{{j.3}}</td>
-                <td>{{j.4}}</td>
-                <td>{{j.5}}</td>
-                <td>{{j.6}}</td>
-                <td>
-                  <input type="number" min="1" >
 
+                <!-- TODO: Working checkboxes, (need to setup value for applying the check to) -->
+                <td><input type="checkbox", value="clicked"/></td> 
+    
+                <td>{{a.0}}</td>
+                <td>{{a.1}}</td>
+                <td>{{a.2}}</td>
+                <td>{{a.3}}</td>
+                <td>{{a.4}}</td>
+                <td>{{a.5}}</td>
+                <td>{{b.OrderQuantityCompleted}}</td>
+                <td>
+                  <form method="POST">
+                    {%csrf_token%}
+                    <input name="fileID" value="{{b.id}}">
+                    <input name="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
+                    <input type="submit" value="Submit">
+                  </form>
+                  {% comment %} <a href="/update/{{j.0}}">{{j.0}}</a> {% endcomment %}
+
+                  {% comment %} <input type="number" , name="filescompleted", value="filescompleted", placeholder="0"/> {% endcomment %}
+                  {% comment %} <td><button class="submit", name="save", value="save">Save Changes</button></td> {% endcomment %}
                 </td>
               </tr>
             </th>
           {%endfor%}
-          <td><button class="submit">Submit Changes</button></td>
-
         </table>
 
         </div>
@@ -189,16 +203,30 @@ echo "hi";
     <br />
     <br />
     <td>order_list <br />{{order_list}}</td>
-    <br />
-    <br />
+    {% comment %} <br />
+    <td>concList <br />{{concList}}</td>
+    <br /> {% endcomment %}
     <td>
       orderid_list <br />
       {{orderid_list}}
     </td>
     <br />
     <td>
-      newItemList <br />
+      newItemList 
+      <br />
       {{newItemList}}
+    </td>
+    <td>
+      <br />
+      pfsdata
+      <br>
+      {{pfsdata}}
+      <br>
+    </td>
+
+    <td>
+      printfilestatus<br />
+      {{printfilestatus}}
     </td>
     {% comment %} <td>
       file_colors_dict <br />

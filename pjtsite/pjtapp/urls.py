@@ -7,6 +7,7 @@ from django.conf.urls import url
 
 # from pjtapp.views import homeListView
 
+
 app_name = 'pjtapp'
 urlpatterns = [
     # path('', homeListView.as_view()), 
@@ -16,8 +17,10 @@ urlpatterns = [
     path('uploadorders/', views.uploadorders, name="uploadorders"),
     path('uploadprintdata/', views.uploadprintdata, name="uploadprintdata"),
     url(r'^details/(?P<orderid>\w+)/$', views.details, name="details"),
+    url('update/<string:filename>', views.detailsUpdate, name="detailsUpdate"),
 
-    path('update_object/<str:pk>/', views.updateObject, name="update_Object")
+    path('details2/', views.details2, name="details2"),
+
 
 ]
 
