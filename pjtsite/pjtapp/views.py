@@ -50,7 +50,7 @@ def home(request):
       RemFiles = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id'], PrintFileCompleted = 0).values_list('PrintFileCompleted', flat=True))
       RemFileSum = RemFiles.count(False)
       
-      
+
       RemPrintTime2 = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
       RemPrintTime = sum(RemPrintTime2)
       
@@ -157,6 +157,8 @@ def details(request, orderid):
     nPQuant = request.POST.get('PQuant')
     if nCompletedFiles >= nPQuant:
       newFile.PrintFileCompleted = True
+    elif nCompletedFiles < nPQuant:
+      newFile.PrintFileCompleted = False
 
     newFile.save()
     # if nCompletedFiles == 
