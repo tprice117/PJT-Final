@@ -56,30 +56,32 @@ echo "hi";
         padding-right: 40px;
         border-radius: 10px;
       }
-      .plus-minus-input {
-        -webkit-align-items: center;
-            -ms-flex-align: center;
-                align-items: center;
+      
+      span {cursor:pointer; }
+      .number{
+        margin:5px;
       }
-
-      .plus-minus-input .input-group-field {
+      .minus, .plus{
+        width:10px;
+        height:10px;
+        background:#f2f2f2;
+        border-radius:4px;
+        padding:8px 5px 8px 5px;
+        border:1px solid #ddd;
+        display: inline-block;
+        vertical-align: middle;
         text-align: center;
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-        padding: 1rem;
       }
-
-      .plus-minus-input .input-group-field::-webkit-inner-spin-button,
-      .plus-minus-input .input-group-field ::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-                appearance: none;
-      }
-
-      .plus-minus-input .input-group-button .circle {
-        border-radius: 50%;
-        padding: 0.25em 0.8em;
-      }
-
+      input{
+        height:34px;
+        width: 10px;
+        text-align: center;
+        font-size: 26px;
+        border:1px solid #ddd;
+        border-radius:4px;
+        display: inline-block;
+        vertical-align: middle;
+        
 
     </style>
     
@@ -190,9 +192,15 @@ echo "hi";
                     {%csrf_token%}
                     <input type = "hidden" name="fileID" value="{{b.id}}">
                     <input type = "hidden" name="PQuant" value="{{a.4}}">
-                    <input name="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
+                    <div class="number">
+                      <span class="plus">+</span>
+                        <input type="text" name="CompletedFiles" id="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
+                      <span class="minus">-</span>
+                    </div>
+
                     <input type="submit" value="Submit">
                   </form>
+                  
                   {% comment %} <a href="/update/{{j.0}}">{{j.0}}</a> {% endcomment %}
 
                   {% comment %} <input type="number" , name="filescompleted", value="filescompleted", placeholder="0"/> {% endcomment %}
@@ -201,6 +209,24 @@ echo "hi";
               </tr>
             </th>
           {%endfor%}
+          <script>
+            $(document).ready(function() {
+              $('.minus').click(function () {
+                var $input = $(this).parent().find('input');
+                var count = parseInt($input.val()) - 1;
+                count = count < 0 ? 0 : count;
+                $input.val(count);
+                $input.change();
+                return false;
+              });
+              $('.plus').click(function () {
+                var $input = $(this).parent().find('input');
+                $input.val(parseInt($input.val()) + 1);
+                $input.change();
+                return false;
+              });
+            });
+          </script>
         </table>
 
         </div>
