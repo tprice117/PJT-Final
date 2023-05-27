@@ -163,7 +163,20 @@ echo "hi";
               <tr>
 
                 <!-- TODO: Working checkboxes, (need to setup value for applying the check to) -->
-                <td><input type="checkbox", value="clicked"/></td> 
+
+                {% comment %} <td><input type="checkbox", value = {{b.PrintFileCompleted}}, id = "OrderCompleted", name = "OrderCompleted"/> {{b.PrintFileCompleted}}</td>  {% endcomment %}
+                <td id = "PrintFile">{{b.PrintFileCompleted}}</td> 
+                <script>
+                  console.log(PrintFile)
+                  if($('OrderCompleted').val()== true){
+                    console.log("true")
+                      $("input:checkbox").prop('checked',true);
+                  }else{
+                    console.log("false")
+                      $("input:checkbox").prop('checked', false);
+                  }
+               </script>
+                
     
                 <td>{{a.0}}</td>
                 <td>{{a.1}}</td>
@@ -171,11 +184,12 @@ echo "hi";
                 <td>{{a.3}}</td>
                 <td>{{a.4}}</td>
                 <td>{{a.5}}</td>
-                <td>{{b.OrderQuantityCompleted}}</td>
+                <td>{{a.6}}</td>
                 <td>
                   <form method="POST">
                     {%csrf_token%}
-                    <input name="fileID" value="{{b.id}}">
+                    <input type = "hidden" name="fileID" value="{{b.id}}">
+                    <input type = "hidden" name="PQuant" value="{{a.4}}">
                     <input name="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
                     <input type="submit" value="Submit">
                   </form>

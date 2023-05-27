@@ -4,6 +4,11 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import redirect
 from django.forms import formset_factory
+from itertools import chain
+from django.db.models import Count, Case, When
+from django.db.models import Sum, IntegerField
+from django.db.models.functions import Cast
+
 
 from django import template
 from .models import *
@@ -44,14 +49,20 @@ def home(request):
       FileTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('FileTime', flat=True))
       RemFiles = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id'], PrintFileCompleted = 0).values_list('PrintFileCompleted', flat=True))
       RemFileSum = RemFiles.count(False)
-      RemPrintTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
-      RemPrintTime = sum(RemPrintTime)
+      
+      
+      RemPrintTime2 = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('PrintTime', flat=True))
+      RemPrintTime = sum(RemPrintTime2)
+      
+      # RemValues = list(PrintFileStatus.objects.filter(ItemSKU = j['ItemSKU_id']).values('PrintFileCompleted'))
+
       OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
 
       ## TODO - FIX values summing object weight and time left as well as "remaining fields" ## 
-      ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'), ).order_by())
+      ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'),).order_by())
+      
       ColorWeight = list(PrintFileData.objects.filter(Color__exact = ColorCount).values('FileWeight'))
-
+      RemValues = list(PrintFileStatus.objects.filter(ItemSKU = j['ItemSKU_id']).values('ItemSKU').annotate(bool_count=Sum(Cast('PrintFileCompleted', IntegerField()))))
       # RemTime = (sum(PrintQuantity) - sum(OrderQuantityCompleted)) * FileTime
       # RemTime = (PrintQuantity - sum(RemTime)) * list(PrintFileData.objects.filter(tblOrderItems_ID_id = j['id']).values_list('FileTime', flat=True))
       # FileColor = PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color', 'PrintQuantity', 'FileTime').order_by('Color')
@@ -68,7 +79,10 @@ def home(request):
       'RemFiles': RemFiles,
       'RemFileSum': RemFileSum,
       'ColorCount': ColorCount,
-      'ColorWeight': ColorWeight}
+      'ColorWeight': ColorWeight,
+      'RemValues': RemValues,
+      # 'LastValues': LastValues
+      }
       # 'RemTime': RemTime}
 
       # if order1['OrdersID'] == 11461:
@@ -136,13 +150,19 @@ def details(request, orderid):
     nID = request.POST.get('fileID')
     #store new completed files in newFile
     nCompletedFiles = request.POST.get('CompletedFiles')
+
     newFile = PrintFileStatus.objects.get(id=nID)
+
     newFile.OrderQuantityCompleted = nCompletedFiles
+    nPQuant = request.POST.get('PQuant')
+    if nCompletedFiles >= nPQuant:
+      newFile.PrintFileCompleted = True
+
     newFile.save()
+    # if nCompletedFiles == 
     #retrieve all previous file objects
     
 
-    newFile.save()
 
   return render(request, 'details.html', {'oid': oid, 
   'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
