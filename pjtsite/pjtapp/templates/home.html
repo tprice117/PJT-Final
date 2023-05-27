@@ -155,7 +155,7 @@
             {%for iteminfo in orderitem.ColorCount%}
             <tr>
               <td>
-              {{iteminfo.Color}},
+              {{iteminfo.Color}}
               </td>
               <td>
               {{iteminfo.count}}
@@ -166,6 +166,12 @@
               <td>
               {{iteminfo.timeSum}}
               </td>
+              {%for iteminfo2 in orderitem.RemValues%}
+
+              <td>
+              {{iteminfo2.bool_count}}
+              </td>
+              {%endfor%}
             </tr>
             {% endfor %}
           </table>
@@ -174,7 +180,7 @@
         {% endfor %}
       </div>
     </div>
-    
+
     {% endfor %}
 
     <!--
