@@ -62,7 +62,7 @@ def home(request):
       ColorCount = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'),).order_by())
       
       ColorWeight = list(PrintFileData.objects.filter(Color__exact = ColorCount).values('FileWeight'))
-      RemValues = list(PrintFileStatus.objects.filter(ItemSKU = j['ItemSKU_id']).values('ItemSKU').annotate(bool_count=Sum(Cast('PrintFileCompleted', IntegerField()))))
+      # RemValues = PrintFileStatus.objects.filter(tbl
       # RemTime = (sum(PrintQuantity) - sum(OrderQuantityCompleted)) * FileTime
       # RemTime = (PrintQuantity - sum(RemTime)) * list(PrintFileData.objects.filter(tblOrderItems_ID_id = j['id']).values_list('FileTime', flat=True))
       # FileColor = PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values('Color', 'PrintQuantity', 'FileTime').order_by('Color')
@@ -80,7 +80,7 @@ def home(request):
       'RemFileSum': RemFileSum,
       'ColorCount': ColorCount,
       'ColorWeight': ColorWeight,
-      'RemValues': RemValues,
+      # 'RemValues': RemValues,
       # 'LastValues': LastValues
       }
       # 'RemTime': RemTime}

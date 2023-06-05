@@ -8,6 +8,7 @@ if($conn === false){
 echo "hi";
 ?>
 
+
 {% load static from static %}
 <!DOCTYPE html>
 <html>
@@ -51,6 +52,7 @@ echo "hi";
         text-align: center;
       }
       td {
+        text-align: center;
         background-color: #dbedfe;
         padding-left: 40px;
         padding-right: 40px;
@@ -81,7 +83,18 @@ echo "hi";
         border-radius:4px;
         display: inline-block;
         vertical-align: middle;
+      }
+      #FilesCompleted{
+        width: 20px;
+        height: 20px;
+
+      }
+      #FileName{
         
+      }
+      #CompletedFiles{
+        
+      }
 
     </style>
     
@@ -167,45 +180,45 @@ echo "hi";
                 <!-- TODO: Working checkboxes, (need to setup value for applying the check to) -->
 
                 {% comment %} <td><input type="checkbox", value = {{b.PrintFileCompleted}}, id = "OrderCompleted", name = "OrderCompleted"/> {{b.PrintFileCompleted}}</td>  {% endcomment %}
-                <td id = "PrintFile">{{b.PrintFileCompleted}}</td> 
-                <script>
-                  console.log(PrintFile)
-                  if($('OrderCompleted').val()== true){
-                    console.log("true")
-                      $("input:checkbox").prop('checked',true);
-                  }else{
-                    console.log("false")
-                      $("input:checkbox").prop('checked', false);
-                  }
-               </script>
+                <td id = "PrintFile">
+                                    {% if b.PrintFileCompleted == True %} <input type = "checkbox" checked>
+                                    {% else %} <input type = "checkbox">
+                                    {% endif %}
+                </td> 
                 
     
-                <td>{{a.0}}</td>
+                <td id = "FileName">{{a.0}}</td>
                 <td>{{a.1}}</td>
                 <td>{{a.2}}</td>
                 <td>{{a.3}}</td>
                 <td>{{a.4}}</td>
                 <td>{{a.5}}</td>
                 <td>{{a.6}}</td>
-                <td>
+                <td id = "FilesCompleted">
                   <form method="POST">
                     {%csrf_token%}
                     <input type = "hidden" name="fileID" value="{{b.id}}">
                     <input type = "hidden" name="PQuant" value="{{a.4}}">
                     <div class="number">
                       <span class="plus">+</span>
-                        <input type="text" name="CompletedFiles" id="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
+                        <input size = "2" maxlength = "2" type="text" name="CompletedFiles" id="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
                       <span class="minus">-</span>
                     </div>
 
-                    <input type="submit" value="Submit">
-                  </form>
-                  
+                    <input id="submit" type="submit" value="Submit" onClick="refreshPage()">
+                  </form> 
+                </td>
+
+                  <script>
+                    function refreshPage(){
+                        window.location.reload();
+                    } 
+                    const element = document.getElementById("submit");
+                  </script>
                   {% comment %} <a href="/update/{{j.0}}">{{j.0}}</a> {% endcomment %}
 
                   {% comment %} <input type="number" , name="filescompleted", value="filescompleted", placeholder="0"/> {% endcomment %}
                   {% comment %} <td><button class="submit", name="save", value="save">Save Changes</button></td> {% endcomment %}
-                </td>
               </tr>
             </th>
           {%endfor%}
