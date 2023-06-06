@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^details/(?P<orderid>\w+)/$', views.details, name="details"),
     url('update/<string:filename>', views.detailsUpdate, name="detailsUpdate"),
 
-    path('details2/', views.details2, name="details2"),
+    # path('details2/', views.details2, name="details2"),
 
 
 ]

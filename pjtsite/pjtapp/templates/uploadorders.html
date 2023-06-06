@@ -12,6 +12,47 @@
     crossorigin="anonymous">
     </script>
   </head>
+  <style>
+    .home-content-table {
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 0.9em;
+    }
+    #footer {
+      position: fixed;
+      padding: 10px 10px 20px 0px;
+      text-align: center;
+      bottom: 0;
+      width: 100%;
+
+      height: 40px;
+      background: grey;
+    }
+    th {
+      text-align: center;
+    }
+    td {
+      background-color: #dbedfe;
+      padding-left: 40px;
+      padding-right: 40px;
+      border-radius: 10px;
+    }
+    .main-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 200px;
+      height: 80px;
+      border: 1px solid gray;
+    }
+    #rcorners1 {
+      border-radius: 25px;
+      background: #dbedfe;
+      padding: 30px;
+      width: 200px;
+      height: 150px;
+    }
+  </style>
   <body>
     <h1>Upload Orders</h1>
     <div class="container-2"> 
@@ -27,10 +68,10 @@
         <input type= "submit" name = submit value = "Submit"/>
     </div>
     </div>
+    <div id="footer">
+      <a href="uploadprintdata" class="button">Upload new Print Models</a>
+      <a href="/" class="button">Order Summary</a>
+    </div>
   </body>
-  <div id="footer">
-    <a href="uploadprintdata" class="button">Upload new Print Models</a>
-    <a href="details" class="button">Order Details</a>
-    <a href="/" class="button">Order Summary</a>
-  </div>
+
 </html>

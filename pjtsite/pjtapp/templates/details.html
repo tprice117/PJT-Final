@@ -155,7 +155,7 @@ echo "hi";
             </tr>
             
           </table>
-          <td>{{pfsdata.0}}</td>
+          {% comment %} <td>{{pfsdata.0}}</td> {% endcomment %}
 
           </h1>
           {% comment %} <tr>
@@ -249,38 +249,7 @@ echo "hi";
       
     </div>
 
-    <td>
-      oid <br />
-      {{oid}}
-    </td>
-    <br />
-    <br />
-    <td>order_list <br />{{order_list}}</td>
-    {% comment %} <br />
-    <td>concList <br />{{concList}}</td>
-    <br /> {% endcomment %}
-    <td>
-      orderid_list <br />
-      {{orderid_list}}
-    </td>
-    <br />
-    <td>
-      newItemList 
-      <br />
-      {{newItemList}}
-    </td>
-    <td>
-      <br />
-      pfsdata
-      <br>
-      {{pfsdata}}
-      <br>
-    </td>
 
-    <td>
-      printfilestatus<br />
-      {{printfilestatus}}
-    </td>
     {% comment %} <td>
       file_colors_dict <br />
       {{file_colors_dict}}
@@ -288,8 +257,7 @@ echo "hi";
     <div id="footer">
       <a href="uploadorders" class="button">Upload new Orders</a>
       {% comment %} <a href={%url 'update_Object' oid.id%} class="button">Upload new Print Models</a> {% endcomment %}
-      <a href="details" class="button">Order Details</a>
-      <a href="/" class="button">Order Summary</a>
+        <a href="/" class="button">Order Summary</a>
     </div>
   </body>
 </html>
