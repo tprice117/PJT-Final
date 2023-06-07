@@ -49,7 +49,7 @@ class PrintFileStatus(models.Model):
   # PrintFileStatusID = models.AutoField(primary_key = True)
   tblOrderItems_ID = models.ForeignKey(OrderItems, on_delete=models.CASCADE)
   ItemSKU = models.CharField(max_length=25)
-  tblPrintFileData_ID = models.ForeignKey(PrintFileData, on_delete=models.CASCADE)
+  tblPrintFileData_ID = models.ForeignKey(PrintFileData, on_delete=models.CASCADE, related_name='statuses')
   OrderQuantityCompleted = models.IntegerField()
   PrintFileCompleted = models.BooleanField()
 

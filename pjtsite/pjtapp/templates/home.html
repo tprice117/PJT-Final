@@ -138,6 +138,7 @@
                   <td>{{orderitem.RemPrinttime}}</td>
                 </tr>
               </table>
+              <td>{{orderitem.RemPrinttime}}</td> 
               </h1>
         
           <table class="home-content-table">
@@ -152,29 +153,38 @@
             <th>RemWeight</th>
             <th>RemTime</th>
           </thead>
-            {%for iteminfo in orderitem.ColorCount%}
+
+            {%for iteminfo in orderitem.AllVals%}
             <tr>
-              <td>
-              {{iteminfo.Color}}
-              </td>
-              <td>
-              {{iteminfo.count}}
-              </td>
-              <td>
-              {{iteminfo.weightSum}}
-              </td>
-              <td>
-              {{iteminfo.timeSum}}
-              </td>
-              {%for iteminfo2 in orderitem.RemValues%}
 
               <td>
-              {{iteminfo2.bool_count}}
+              {{iteminfo.0.Color}}
               </td>
-              {%endfor%}
+              <td>
+              {{iteminfo.0.count}}
+              </td>
+              <td>
+              {{iteminfo.0.weightSum}}
+              </td>
+              <td>
+              {{iteminfo.0.timeSum}}
+              </td>
+
+              <td>
+              {{iteminfo.1.RemQuant}}
+              </td>
+              <td>
+              {{iteminfo.1.RemWeight}}
+              </td>
+              <td>
+              {{iteminfo.1.RemTime}}
+              </td>
             </tr>
+
             {% endfor %}
+
           </table>
+          
         </div>
         
         {% endfor %}
