@@ -8,6 +8,7 @@ from itertools import chain
 from django.db.models import Count, Case, When
 from django.db.models import Sum, IntegerField
 from django.db.models.functions import Cast
+from django.db.models import F
 
 
 from django import template
@@ -62,7 +63,7 @@ def home(request):
       OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
 
       ColorCount = PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = j['id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'),).order_by()
-      RemVals = PrintFileData.objects.filter(statuses__PrintFileCompleted = 0, statuses__tblOrderItems_ID_id = j['id']).values('Color').annotate(RemQuant = Count('PrintQuantity'), RemWeight = Sum('PrintWeight'), RemTime = Sum('PrintTime'))
+      RemVals = PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = j['id']).values('Color').annotate(RemQuant = Sum(F('PrintQuantity') - F('statuses__OrderQuantityCompleted')), RemWeight = Sum((F('PrintQuantity') - F('statuses__OrderQuantityCompleted')) * F('PrintWeight')), RemTime = Sum((F('PrintQuantity') - F('statuses__OrderQuantityCompleted')) * F('PrintTime')))
       # RemQuant = PrintFileData.objects.filter(statuses__PrintFileCompleted__exact = 0, statuses__tblOrderItems_ID_id = j['id']).aggregate(RemQuant=Sum('PrintQuantity')).get("RemQuant")
       AllVals = zip(ColorCount, RemVals)
       # RemValues = PrintFileStatus.objects.filter(tbl
