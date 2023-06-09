@@ -12,8 +12,7 @@ from django.db.models import F
 from django import forms, template
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .forms import UploadFileForm
-from .models import ModelWithFileField
+
 from .models import *
 from .models import OrderItems
 from django.utils.translation import gettext as _
@@ -23,7 +22,6 @@ from django.views.generic import TemplateView, ListView, UpdateView
 from django.db.models import Count, Sum, Avg
 from .forms import ObjectForm
 import numpy as np
-import openpyxl 
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
 orderitems = list(OrderItems.objects.values())
@@ -207,13 +205,13 @@ def details2(request):
 # def OrderItems(request):
 #   OrderItemsList = OrderItems.objects.all()
 #   return render(request, 'home.html', {'OrderItemsList': OrderItemsList})
-def uploadorders(request):
-  if request.method == "POST":
-    form = UploadFileForm(request.POST, request.FILES)
-    if form.is_valid():
-      inst = ModelWithFileField(file_field = request.FILES["file"])
-      inst.save()
-    else:
-      form = UploadFileForm()
-  return render(request, 'uploadorders.html', {"form": form})
+# def uploadorders(request):
+#   if request.method == "POST":
+#     form = UploadFileForm(request.POST, request.FILES)
+#     if form.is_valid():
+#       inst = ModelWithFileField(file_field = request.FILES["file"])
+#       inst.save()
+#     else:
+#       form = UploadFileForm()
+#   return render(request, 'uploadorders.html', {"form": form})
 
