@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView, ListView
 from django.conf.urls import url
 
+
 # from pjtapp.views import homeListView
 
 
@@ -13,6 +14,7 @@ urlpatterns = [
     # path('', homeListView.as_view()), 
     # isnt working correctly ^
     path('', views.home, name="home"),
+    path('admin/', admin.site.urls),
 
     path('uploadorders/', views.uploadorders, name="uploadorders"),
     path('uploadprintdata/', views.uploadprintdata, name="uploadprintdata"),
