@@ -9,15 +9,9 @@ from django.db.models import Count, Case, When
 from django.db.models import Sum, IntegerField
 from django.db.models.functions import Cast
 from django.db.models import F
-<<<<<<< HEAD
 from django import forms, template
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-=======
-
-
-from django import template
->>>>>>> 1187c1bdca2afd2d2bfdd8ca0d9b4ab9669d2f66
 from .models import *
 from .models import OrderItems
 from django.utils.translation import gettext as _
