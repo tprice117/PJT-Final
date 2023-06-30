@@ -13,6 +13,12 @@ from django import forms, template
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
+from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
+
+import os, datetime
+from django.shortcuts import render
+from .forms import *
 from .models import *
 from .models import OrderItems
 from django.utils.translation import gettext as _
@@ -22,6 +28,10 @@ from django.views.generic import TemplateView, ListView, UpdateView
 from django.db.models import Count, Sum, Avg
 from .forms import ObjectForm
 import numpy as np
+
+import sys
+sys.path.append(os.path.dirname(os.getcwd()))
+from scripts.orderitems_load import iterativeLoadOI
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
 orderitems = list(OrderItems.objects.values())
@@ -103,12 +113,33 @@ def home(request):
      'newOrderList' : newOrderList, 'printmodels': printmodels,})
     #  'exampleorder': exampleorder})
      
-def uploadorders(request):
-  return render(request, 'uploadorders.html')
+  
   
 def uploadprintdata(request):
   return render(request, 'uploadprintdata.html')
-  
+
+def success(request):
+  return render(request, 'success.html')
+
+from .forms import UploadFileForm
+
+def uploadorders(request):
+  if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.cleaned_data['file']
+            # Process the file here or save it to the database
+            # You can access the file using 'file' variable
+            uploaded_file = UploadedFile(file=file)
+            iterativeLoadOI(file)
+            uploaded_file.save()
+            return redirect('/success/')  # Redirect to a success page
+  else:
+        form = UploadFileForm()
+  return render(request, 'uploadorders.html', {'form': form})
+
+
+
 def details(request, orderid):
   # if request.method == "POST":
   #   print(request.POST)
@@ -201,6 +232,7 @@ def details2(request):
   fields = ['FileName']
   return render(request, 'details2.html')
 # 2343347323	Shingo Sakurai	Shingo	Sakurai
+
 
 # def OrderItems(request):
 #   OrderItemsList = OrderItems.objects.all()
