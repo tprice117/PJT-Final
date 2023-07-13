@@ -32,6 +32,7 @@ import numpy as np
 import sys
 sys.path.append(os.path.dirname(os.getcwd()))
 from scripts.orderitems_load import iterativeLoadOI
+from scripts.orders_load import iterativeLoadO
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
 orderitems = list(OrderItems.objects.values())
@@ -115,8 +116,7 @@ def home(request):
      
   
   
-def uploadprintdata(request):
-  return render(request, 'uploadprintdata.html')
+
 
 def success(request):
   return render(request, 'success.html')
@@ -128,17 +128,26 @@ def uploadorders(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.cleaned_data['file']
+            # ofile = form.cleaned_data['ofile']
             # Process the file here or save it to the database
             # You can access the file using 'file' variable
-            uploaded_file = UploadedFile(file=file)
-            iterativeLoadOI(file)
-            uploaded_file.save()
-            return redirect('/success/')  # Redirect to a success page
+            if (UploadedFile(file=file)):
+              uploadedOI_file = UploadedFile(file=file)
+              iterativeLoadOI(file)
+              uploadedOI_file.save()
+              return redirect('/success/') # Redirect to success page
+            # if (UploadedFile(ofile=ofile)):
+            #   uploadedO_file = UploadedFile(ofile=ofile)
+            #   iterativeLoadO(ofile)
+            #   uploadedO_file.save()
+            #   return redirect('/success/')# Redirect to a success page
   else:
         form = UploadFileForm()
   return render(request, 'uploadorders.html', {'form': form})
 
-
+def uploadprintdata(request):
+  
+  return render(request, 'uploadprintdata.html')
 
 def details(request, orderid):
   # if request.method == "POST":
