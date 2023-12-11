@@ -11,7 +11,10 @@ class ObjectForm(forms.ModelForm):
         fields = ['PrintFileCompleted', 'OrderQuantityCompleted']
         
 
-class UploadFileForm(forms.Form):
+class UploadCSVForm(forms.Form):
+    csvFile = forms.FileField()
+    
+class UploadPrintDataForm(forms.Form):
     file = forms.FileField()
 # class UserInfoForm(forms.Form):
 #     name = forms.CharField()

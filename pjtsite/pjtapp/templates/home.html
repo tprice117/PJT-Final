@@ -90,6 +90,7 @@
       <p></p> {% endcomment %}
     
     {% for order in newOrderList %}
+    <br>
 
     <div data-role="main-container" class="ui-content">
       <div align="right">
@@ -120,7 +121,7 @@
     </h1>
 
         {% for orderitem in order.itemList%}
-
+        <br>
         <div data-role="collapsible">
               <h1>
               <table class="home-content-table">
@@ -220,7 +221,11 @@
   </div>
     <div id="footer">
       <a href="uploadorders/" class="button">Upload new Orders</a>
-      <a href="uploadprintdata/" class="button">Upload new Print Models</a>
+      <a href="uploadorderitems/" class="button">Upload new Order Items</a>
+
+      <a href="uploadprintdata/" class="button">Upload new Print File Data</a>
+      <a href="uploadprintmodels/" class="button">Upload new Print Models</a>
+
     </div>
   </body>
 

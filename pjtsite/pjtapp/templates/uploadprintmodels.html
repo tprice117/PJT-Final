@@ -55,16 +55,16 @@
     }
   </style>
   <body>
-    <h1>Upload Orders </h1>
+    <h1>Upload Print Models</h1>
+
       <div class="box-2">
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          {{form}}
-          {% comment %} {{form.errors}}
           <div>
-            <label for="ofile">Upload Orders File:</label>
-            <input type="file" name="ofile" id="ofile">
-          </div> {% endcomment %}
+            {{form}}
+            {% comment %} <label for="oi_file">Upload Order Items File:</label>
+            <input type="file" name="oifile" id="oi_file"> {% endcomment %}
+          </div>
 
           <button type="submit">Upload</button>
         </form>

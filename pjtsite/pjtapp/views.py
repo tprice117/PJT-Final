@@ -12,6 +12,14 @@ from django.db.models import F
 from django import forms, template
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+import csv, os, sys
+sys.path.append(os.path.dirname(os.getcwd()))
+import datetime
+from pjtapp.models import Orders
+import numpy
+import pandas as pd
+import logging
+import chardet
 
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
@@ -33,6 +41,7 @@ import sys
 sys.path.append(os.path.dirname(os.getcwd()))
 from scripts.orderitems_load import iterativeLoadOI
 from scripts.orders_load import iterativeLoadO
+from scripts.printfiledata_load import iterativeLoadPFD
 
 orders = list(Orders.objects.filter(OrderCompleted=0).values())
 orderitems = list(OrderItems.objects.values())
@@ -121,33 +130,145 @@ def home(request):
 def success(request):
   return render(request, 'success.html')
 
-from .forms import UploadFileForm
+from .forms import UploadCSVForm, UploadPrintDataForm
 
 def uploadorders(request):
   if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
+        form = UploadCSVForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.cleaned_data['file']
-            # ofile = form.cleaned_data['ofile']
+          
+            handleOFile(request.FILES['csvFile'])
+            
             # Process the file here or save it to the database
             # You can access the file using 'file' variable
-            if (UploadedFile(file=file)):
-              uploadedOI_file = UploadedFile(file=file)
-              iterativeLoadOI(file)
-              uploadedOI_file.save()
-              return redirect('/success/') # Redirect to success page
-            # if (UploadedFile(ofile=ofile)):
-            #   uploadedO_file = UploadedFile(ofile=ofile)
-            #   iterativeLoadO(ofile)
-            #   uploadedO_file.save()
-            #   return redirect('/success/')# Redirect to a success page
+            
+            # iterativeLoadO(ofile)
+            return redirect('/success/') # Redirect to success page
+        else:
+          print(form.errors)
   else:
-        form = UploadFileForm()
+        form = UploadCSVForm()
   return render(request, 'uploadorders.html', {'form': form})
 
+def handleOFile(Ofile):
+    decoded_file = Ofile.read().decode('utf-8').splitlines()
+    csv_reader = csv.reader(decoded_file)
+
+    # Skip header if exists
+    next(csv_reader, None)
+
+    # Iterate through rows and save to the database
+    for row in csv_reader:
+      print(row)
+      df = pd.to_datetime(row[4])
+      df2 = pd.to_datetime(row[5])
+      # print(df)
+      row[4] = df.strftime('%Y-%m-%d')
+      row[5] = df2.strftime('%Y-%m-%d')
+      row[7] = row[7].capitalize()
+      o = Orders(OrdersID=row[0], FullName=row[1], FirstName=row[2],
+      LastName=row[3], SaleDate=row[4], RequiredShipDate=row[5],
+      OrderPlatform=row[6], OrderCompleted=row[7])
+      o.save()
+
+def uploadorderitems(request):
+  if request.method == 'POST':
+      form = UploadCSVForm(request.POST, request.FILES)
+      if form.is_valid():
+          handleOIFile(request.FILES['csvFile'])
+
+          return redirect('/success/') # Redirect to success page
+  else:
+        form = UploadCSVForm()
+  return render(request, 'uploadorderitems.html', {'form': form})
+
+def handleOIFile(OIfile):
+    decoded_file = OIfile.read().decode('utf-8').splitlines()
+    csv_reader = csv.reader(decoded_file)
+
+    # Skip header if exists
+    next(csv_reader, None)
+
+    # Iterate through rows and save to the database
+    for row in csv_reader:
+      print(row)
+      o, created = Orders.objects.get_or_create(OrdersID=row[0])
+      pm, created = PrintModels.objects.get_or_create(ModelSKU=row[1])
+
+      oi = OrderItems(OrdersID=o, ItemSKU=pm, 
+      OrderQuantity=row[2])
+      oi.save()
+    
+      if PrintModels.objects.filter(ModelName__exact=''):
+        c = PrintModels.objects.filter(ModelName__exact='').values()
+        for value in c.values():
+          logging.warning(value)
+        PrintModels.objects.filter(ModelName__exact='').delete()
+
 def uploadprintdata(request):
+  if request.method == 'POST':
+    form = UploadCSVForm(request.POST, request.FILES)
+    if form.is_valid():
+        handlePDFile(request.FILES['csvFile'])
+
+        return redirect('/success/') # Redirect to success page
+  else:
+        form = UploadCSVForm()
+
+  return render(request, 'uploadprintdata.html', {'form': form})
+
+def handlePDFile(PDFile):
+  decoded_file = PDFile.read().decode('utf-8').splitlines()
+  csv_reader = csv.reader(decoded_file)
+
+    # Skip header if exists
+  next(csv_reader, None)
+
+    # Iterate through rows and save to the database
+  for row in csv_reader:
+    print(row)
+    pm, created = PrintModels.objects.get_or_create(ModelSKU=row[0])
+
+    pfd = PrintFileData(FileName=row[1], Scope=row[2],
+    Printer=row[3], Color=row[4], FileWeight=row[5],
+    FileTime=row[6], PrintQuantity=row[7], PrintWeight=row[8],
+    PrintTime=row[9], ParentSKU=pm)
+    pfd.save() 
   
-  return render(request, 'uploadprintdata.html')
+def uploadprintmodels(request):
+  if request.method == 'POST':
+    form = UploadCSVForm(request.POST, request.FILES)
+    if form.is_valid():
+        handlePMFile(request.FILES['csvFile'])
+
+        return redirect('/success/') # Redirect to success page
+  else:
+        form = UploadCSVForm()
+
+  return render(request, 'uploadprintmodels.html', {'form': form})
+
+def handlePMFile(PMFile):
+  rawdata = PMFile.read()
+  result = chardet.detect(rawdata)
+  file_encoding = result['encoding']
+  
+  logging.basicConfig(filename='printmodelsload.log', encoding='latin-1', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+  decoded_file = PMFile.read().decode(file_encoding)
+  csv_reader = csv.reader(decoded_file.splitlines())
+
+    # Skip header if exists
+  next(csv_reader, None)
+
+    # Iterate through rows and save to the database
+  for row in csv_reader: 
+    print(row)
+    if PrintModels.ModelName != "":
+      pm = PrintModels(ModelSKU=row[0], ModelName=row[1], BoardGame=row[2])
+    else:
+      logging.warning()
+    #PrintModels.objects.filter(ModelSKU__isnull=True)
+
+    pm.save()
 
 def details(request, orderid):
   # if request.method == "POST":

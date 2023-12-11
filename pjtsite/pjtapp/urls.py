@@ -20,6 +20,9 @@ urlpatterns = [
 
     path('uploadorders/', views.uploadorders, name="uploadorders"),
     path('success/', views.success, name="success"),
+    path('uploadorderitems/', views.uploadorderitems, name="uploadorderitems"),
+    path('uploadprintmodels/', views.uploadprintmodels, name="uploadprintmodels"),
+
 
     path('uploadprintdata/', views.uploadprintdata, name="uploadprintdata"),
     url(r'^details/(?P<orderid>\w+)/$', views.details, name="details"),

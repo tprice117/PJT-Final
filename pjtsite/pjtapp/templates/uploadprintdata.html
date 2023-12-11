@@ -6,6 +6,12 @@
     <meta charset="utf-8" />
     <title>Test PJT</title>
     <link rel="stylesheet" href="{%static 'style.css'%}" />
+    <script 
+    src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+    crossorigin="anonymous">
+    </script>
+    
   </head>
   <style>
     .home-content-table {
@@ -49,24 +55,24 @@
     }
   </style>
   <body>
-    <h1>Upload Print Models</h1>
-    <div class="container-2">
-      <form id="orderfilesform" action=''>
-          <div class="box-1">
-            <label for "ordersfile">Select Print File Data CSV File:</label>
-            <input type="file" id="ordersfile" name="ordersfile" accept=".csv">
+    <h1>Upload Print File Data</h1>
+
+      <div class="box-2">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div>
+            {{form}}
+            {% comment %} <label for="oi_file">Upload Order Items File:</label>
+            <input type="file" name="oifile" id="oi_file"> {% endcomment %}
           </div>
-          <div class="box-2">
-            <label for "orderitemsfile">Select an Print Models CSV File:</label>
-            <input type="file" id="orderitemsfile" name="orderitemsfile" accept=".csv">
-          </div>
-          <div class="box-3">
-            <input type= "submit" name = submit value = "Submit"/>
-          </div>
-      </form>
-    </div>
+
+          <button type="submit">Upload</button>
+        </form>
+
+       </div>
+      {% comment %} </div> {% endcomment %}
     <div id="footer">
-      <a href="uploadorders" class="button">Upload new Orders</a>
+      <a href="uploadprintdata" class="button">Upload new Print Models</a>
       <a href="/" class="button">Order Summary</a>
     </div>
   </body>
