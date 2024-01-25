@@ -5,7 +5,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path('', include('pjtapp.urls', namespace="pjtapp")),
-    path('uploadorders/', include('pjtapp.urls', namespace="uploadorders")),
 
 ]
 

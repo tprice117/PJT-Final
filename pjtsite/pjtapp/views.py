@@ -20,6 +20,8 @@ import numpy
 import pandas as pd
 import logging
 import chardet
+from django.urls import reverse
+from django.shortcuts import redirect
 
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
@@ -54,6 +56,7 @@ def home(request):
   # orderitems = list(OrderItems.objects.values())
   # printmodels = list(PrintModels.objects.values())
   # printfiledata = list(PrintFileData.objects.values())
+  printFileStatus_update()
   newOrderList=[]
   length = len(orders)
 
@@ -71,7 +74,6 @@ def home(request):
       # FileTime = list(PrintFileData.objects.filter(ParentSKU = j['ItemSKU_id']).values_list('FileTime', flat=True))
       RemFiles = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id'], PrintFileCompleted = 0).values_list('PrintFileCompleted', flat=True))
       RemFileSum = RemFiles.count(False)
-      
 
       RemPrintTime = PrintFileData.objects.filter(statuses__PrintFileCompleted = 0, statuses__ItemSKU = j['ItemSKU_id'],  statuses__tblOrderItems_ID_id = j['id']).aggregate(RemPrintTime=Sum('PrintTime')).get("RemPrintTime")
 
@@ -82,7 +84,6 @@ def home(request):
       # RemValues = list(PrintFileStatus.objects.filter(ItemSKU = j['ItemSKU_id']).values('PrintFileCompleted'))
 
       OrderQuantityCompleted = list(PrintFileStatus.objects.filter(tblOrderItems_ID_id = j['id']).values_list('OrderQuantityCompleted', flat=True))
-
       ColorCount = PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = j['id']).values('Color').annotate(count=Count('Color'), weightSum = Sum('PrintWeight'), timeSum = Sum('PrintTime'),).order_by()
       RemVals = PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = j['id']).values('Color').annotate(RemQuant = Sum(F('PrintQuantity') - F('statuses__OrderQuantityCompleted')), RemWeight = Sum((F('PrintQuantity') - F('statuses__OrderQuantityCompleted')) * F('PrintWeight')), RemTime = Sum((F('PrintQuantity') - F('statuses__OrderQuantityCompleted')) * F('PrintTime')))
       # RemQuant = PrintFileData.objects.filter(statuses__PrintFileCompleted__exact = 0, statuses__tblOrderItems_ID_id = j['id']).aggregate(RemQuant=Sum('PrintQuantity')).get("RemQuant")
@@ -106,8 +107,9 @@ def home(request):
       'ColorCount': ColorCount,
       # 'RemQuant': RemQuant,
       'RemVals' : RemVals,
-      'AllVals': AllVals,
+      'AllVals': AllVals
       # 'LastValues': LastValues
+      # 'ColorList' : ColorList
       }
       # 'RemTime': RemTime}
 
@@ -227,6 +229,8 @@ def handlePDFile(PDFile):
     # Iterate through rows and save to the database
   for row in csv_reader:
     print(row)
+    
+    
     pm, created = PrintModels.objects.get_or_create(ModelSKU=row[0])
 
     pfd = PrintFileData(FileName=row[1], Scope=row[2],
@@ -248,27 +252,48 @@ def uploadprintmodels(request):
   return render(request, 'uploadprintmodels.html', {'form': form})
 
 def handlePMFile(PMFile):
-  rawdata = PMFile.read()
-  result = chardet.detect(rawdata)
-  file_encoding = result['encoding']
-  
   logging.basicConfig(filename='printmodelsload.log', encoding='latin-1', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-  decoded_file = PMFile.read().decode(file_encoding)
-  csv_reader = csv.reader(decoded_file.splitlines())
+  decoded_file = PMFile.read().decode('latin-1').splitlines()
+  # ISO-8859-1
+  csv_reader = csv.reader(decoded_file)
 
     # Skip header if exists
   next(csv_reader, None)
-
     # Iterate through rows and save to the database
   for row in csv_reader: 
-    print(row)
     if PrintModels.ModelName != "":
       pm = PrintModels(ModelSKU=row[0], ModelName=row[1], BoardGame=row[2])
     else:
-      logging.warning()
-    #PrintModels.objects.filter(ModelSKU__isnull=True)
-
+      logging.warning("Invalid")
     pm.save()
+    
+    
+def printFileStatus_update():
+  orderitems = list(OrderItems.objects.values())
+  #PrintFileData.objects.filter(ParentSKU = orderitems[row]['ItemSKU_id']).values_list('ParentSKU', flat=True).get()
+  for currOrder in orderitems:
+    if not PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = currOrder['id']):
+      for row in currOrder:
+        
+        oi = row['id']
+        print("new row", row, oi)
+        qspfd = PrintFileData.objects.filter(ParentSKU = row['ItemSKU_id']).values()
+        print(qspfd)
+
+        for rec in qspfd:
+          # if (row == 2):
+          #   print(rec, 'id', qspfd[rec])
+        # for rec in range(len(printfiledata)):
+          # oisku, created = OrderItems.objects.get(ItemSKU = i[1])
+          pfs = PrintFileStatus(
+          ItemSKU = rec['ParentSKU_id'],
+          OrderQuantityCompleted = 0,
+          PrintFileCompleted = 0,
+          tblOrderItems_ID_id = oi,
+          tblPrintFileData_ID_id = rec['id']
+          ) 
+          pfs.save()
+
 
 def details(request, orderid):
   # if request.method == "POST":
@@ -317,11 +342,12 @@ def details(request, orderid):
     nID = request.POST.get('fileID')
     #store new completed files in newFile
     nCompletedFiles = request.POST.get('CompletedFiles')
-
+    nCompletedFiles = int(nCompletedFiles)
     newFile = PrintFileStatus.objects.get(id=nID)
 
     newFile.OrderQuantityCompleted = nCompletedFiles
     nPQuant = request.POST.get('PQuant')
+    nPQuant = int(nPQuant)
     if nCompletedFiles >= nPQuant:
       newFile.PrintFileCompleted = True
     elif nCompletedFiles < nPQuant:

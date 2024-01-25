@@ -6,6 +6,7 @@ from django.views.generic import TemplateView, ListView
 from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import uploadorders
 
 
 # from pjtapp.views import homeListView

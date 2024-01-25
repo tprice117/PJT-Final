@@ -31,7 +31,7 @@ class OrderItems(models.Model):
   ItemSKU = models.ForeignKey(PrintModels, to_field="ModelSKU", db_column="ItemSKU", on_delete=models.CASCADE)
   OrderQuantity = models.CharField(max_length=12)
 
-class PrintFileData(models.Model): #Need to add PrintFileDataID
+class PrintFileData(models.Model): 
   # PrintFileDataID = models.AutoField(primary_key = True)
   ParentSKU = models.ForeignKey(PrintModels, to_field="ModelSKU", db_column="ParentSKU", on_delete=models.CASCADE)
   FileName = models.CharField(max_length=128)

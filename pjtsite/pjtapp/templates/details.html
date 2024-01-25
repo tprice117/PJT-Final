@@ -1,14 +1,4 @@
 
-<?php
-$conn = pg_connect("localhost 5432 postgres");
-if($conn === false){
-  die("ERROR: Could not connect. " 
-              . pg_connect_error());
-}
-echo "hi";
-?>
-
-
 {% load static from static %}
 <!DOCTYPE html>
 <html>
@@ -25,7 +15,7 @@ echo "hi";
     />
     {% endcomment %}
 
-    <link rel="stylesheet" href="{%static 'style.css'%}" />
+    {% comment %} <link rel="stylesheet" href="{%static 'style.css'%}" /> {% endcomment %}
     <link
       rel="stylesheet"
       href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"
@@ -177,13 +167,10 @@ echo "hi";
           {%for a,b in i.concList %}
               <tr>
 
-                <!-- TODO: Working checkboxes, (need to setup value for applying the check to) -->
-
-                {% comment %} <td><input type="checkbox", value = {{b.PrintFileCompleted}}, id = "OrderCompleted", name = "OrderCompleted"/> {{b.PrintFileCompleted}}</td>  {% endcomment %}
                 <td id = "PrintFile">
-                                    {% if b.PrintFileCompleted == True %} <input type = "checkbox" checked>
-                                    {% else %} <input type = "checkbox">
-                                    {% endif %}
+                  {% if b.PrintFileCompleted == True %} <input type = "checkbox" checked>
+                  {% else %} <input type = "checkbox">
+                  {% endif %}
                 </td> 
                 
     
@@ -199,21 +186,36 @@ echo "hi";
                     {%csrf_token%}
                     <input type = "hidden" name="fileID" value="{{b.id}}">
                     <input type = "hidden" name="PQuant" value="{{a.4}}">
-                    <div class="number">
-                      <span class="plus">+</span>
-                        <input size = "2" maxlength = "2" type="text" name="CompletedFiles" id="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
-                      <span class="minus">-</span>
-                    </div>
+                    <input name="CompletedFiles" id="CompletedFiles" value="{{b.OrderQuantityCompleted}}">
+                    {% comment %} <button onclick="increment()">Increase</button>
+                    <button onclick="decrement()">Decrease</button> {% endcomment %}
 
                     <input id="submit" type="submit" value="Submit" onClick="refreshPage()">
                   </form> 
                 </td>
 
                   <script>
-                    function refreshPage(){
-                        window.location.reload();
-                    } 
-                    const element = document.getElementById("submit");
+                    function increment() {
+                      // Get the current value from the input field
+                      var currentValue = parseInt(document.getElementById("CompletedFiles").value);
+                
+                      // Increment the value by 1
+                      var newValue = currentValue + 1;
+                
+                      // Update the input field with the new value
+                      document.getElementById("CompletedFiles").value = newValue;
+                    }
+                
+                    function decrement() {
+                      // Get the current value from the input field
+                      var currentValue = parseInt(document.getElementById("CompletedFiles").value);
+                
+                      // Decrement the value by 1, but ensure it doesn't go below 0
+                      var newValue = currentValue > 0 ? currentValue - 1 : 0;
+                
+                      // Update the input field with the new value
+                      document.getElementById("CompletedFiles").value = newValue;
+                    }
                   </script>
                   {% comment %} <a href="/update/{{j.0}}">{{j.0}}</a> {% endcomment %}
 
@@ -250,10 +252,10 @@ echo "hi";
     </div>
 
 
-    {% comment %} <td>
-      file_colors_dict <br />
+  <td>
+      {{file_colors_dict}} <br />
       {{file_colors_dict}}
-    </td> {% endcomment %}
+    </td>
     <div id="footer">
       <a href="uploadorders" class="button">Upload new Orders</a>
       {% comment %} <a href={%url 'update_Object' oid.id%} class="button">Upload new Print Models</a> {% endcomment %}

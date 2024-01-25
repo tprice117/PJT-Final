@@ -88,10 +88,8 @@
       {% comment %} <p></p>
       {{newOrderList}}
       <p></p> {% endcomment %}
-    
     {% for order in newOrderList %}
     <br>
-
     <div data-role="main-container" class="ui-content">
       <div align="right">
         <a href="details/{{order.OrdersID}}" id="rcorners1">Order Details</a>
@@ -116,10 +114,9 @@
           Date: {{order.SaleDate}}, Ship Date: {{order.RequiredShipDate}}
           </tbody>
         </h1> {% endcomment %}
-
+        
       </table>
     </h1>
-
         {% for orderitem in order.itemList%}
         <br>
         <div data-role="collapsible">
@@ -217,8 +214,9 @@
       }
     </script>
     -->
-    {% comment %} {% for j in OrderItemsList %} {% endfor %} {% endcomment %}
-  </div>
+
+    {{newOrderList.AllVals}}
+   </div>
     <div id="footer">
       <a href="uploadorders/" class="button">Upload new Orders</a>
       <a href="uploadorderitems/" class="button">Upload new Order Items</a>
