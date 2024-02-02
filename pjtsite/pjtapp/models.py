@@ -17,7 +17,6 @@ class Orders(models.Model):
   RequiredShipDate = models.DateField() #DATE FORMATS NOT ACCEPTED IN MODEL VERSION BUT IN FORMAT IS FINE
   OrderPlatform = models.CharField(max_length=32)
   OrderCompleted = models.BooleanField()
-  
 
 class PrintModels(models.Model): 
   # ModelID = models.AutoField(primary_key=True)
@@ -74,6 +73,7 @@ class PrintFileStates(models.Model):
 class UploadedFile(models.Model):
     file = models.FileField(upload_to='uploads/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    
     
 def __str__(self):
   return self.OrderID

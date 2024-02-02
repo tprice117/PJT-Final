@@ -69,27 +69,9 @@
     <h1>Home Page</h1>
     
     <div class="container-2">
-      
-      {% comment %} {{orders}}
-      <p></p>
-      {{length}}
-      <p></p>
-      {{itemList}}
-      <p></p>
-      {{itemList2}}
-      <p></p>
-      {{orderitems}}
-      <p></p>
-      {{order1}} {{printmodels}}
-      <p></p>
-      {{exampleorder}}
-      <p></p>
-      {% endcomment %} 
-      {% comment %} <p></p>
-      {{newOrderList}}
-      <p></p> {% endcomment %}
-    {% for order in newOrderList %}
+
     <br>
+    {% for order in newOrderList %}
     <div data-role="main-container" class="ui-content">
       <div align="right">
         <a href="details/{{order.OrdersID}}" id="rcorners1">Order Details</a>
@@ -190,32 +172,6 @@
     </div>
 
     {% endfor %}
-
-    <!--
-    <button type="button" class="collapsible">Open Collapsible</button>
-    <div class="content">
-      <p></p>
-    </div>
-
-    <script>
-      var coll = document.getElementsByClassName("collapsible");
-      var i;
-
-      for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-          this.classList.toggle("active");
-          var content = this.nextElementSibling;
-          if (content.style.display === "block") {
-            content.style.display = "none";
-          } else {
-            content.style.display = "block";
-          }
-        });
-      }
-    </script>
-    -->
-
-    {{newOrderList.AllVals}}
    </div>
     <div id="footer">
       <a href="uploadorders/" class="button">Upload new Orders</a>

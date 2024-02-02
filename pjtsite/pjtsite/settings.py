@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-4pvky4$f_v+^!cj+d!j^(94y7%3o9gad&iq2!5kwe(yiq7!m)b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_extensions',
     'pjtapp',
+    # 'testapp',
     # 'crispy_forms',
 ]
 
@@ -95,6 +96,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -141,3 +143,4 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

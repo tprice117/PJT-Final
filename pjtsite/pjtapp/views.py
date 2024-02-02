@@ -19,7 +19,7 @@ from pjtapp.models import Orders
 import numpy
 import pandas as pd
 import logging
-import chardet
+# import chardet
 from django.urls import reverse
 from django.shortcuts import redirect
 
@@ -59,6 +59,7 @@ def home(request):
   printFileStatus_update()
   newOrderList=[]
   length = len(orders)
+
 
   for i in range(len(orders)):
     itemList = []
@@ -193,19 +194,20 @@ def handleOIFile(OIfile):
 
     # Iterate through rows and save to the database
     for row in csv_reader:
-      print(row)
-      o, created = Orders.objects.get_or_create(OrdersID=row[0])
-      pm, created = PrintModels.objects.get_or_create(ModelSKU=row[1])
+      if not OrderItems.objects.filter(OrdersID_id = row[0]):  
+        print(row)
+        o, created = Orders.objects.get_or_create(OrdersID=row[0])
+        pm, created = PrintModels.objects.get_or_create(ModelSKU=row[1])
 
-      oi = OrderItems(OrdersID=o, ItemSKU=pm, 
-      OrderQuantity=row[2])
-      oi.save()
-    
-      if PrintModels.objects.filter(ModelName__exact=''):
-        c = PrintModels.objects.filter(ModelName__exact='').values()
-        for value in c.values():
-          logging.warning(value)
-        PrintModels.objects.filter(ModelName__exact='').delete()
+        oi = OrderItems(OrdersID=o, ItemSKU=pm, 
+        OrderQuantity=row[2])
+        oi.save()
+      
+        if PrintModels.objects.filter(ModelName__exact=''):
+          c = PrintModels.objects.filter(ModelName__exact='').values()
+          for value in c.values():
+            logging.warning(value)
+          PrintModels.objects.filter(ModelName__exact='').delete()
 
 def uploadprintdata(request):
   if request.method == 'POST':
@@ -272,12 +274,12 @@ def printFileStatus_update():
   orderitems = list(OrderItems.objects.values())
   #PrintFileData.objects.filter(ParentSKU = orderitems[row]['ItemSKU_id']).values_list('ParentSKU', flat=True).get()
   for currOrder in orderitems:
-    if not PrintFileData.objects.filter(statuses__tblOrderItems_ID_id = currOrder['id']):
-      for row in currOrder:
+    pfd = PrintFileStatus.objects.filter(tblOrderItems_ID = currOrder['id'])
+    if not pfd:
         
-        oi = row['id']
-        print("new row", row, oi)
-        qspfd = PrintFileData.objects.filter(ParentSKU = row['ItemSKU_id']).values()
+        oi = currOrder['id']
+        print("new row", currOrder, oi)
+        qspfd = PrintFileData.objects.filter(ParentSKU = currOrder['ItemSKU_id']).values()
         print(qspfd)
 
         for rec in qspfd:
@@ -313,8 +315,7 @@ def details(request, orderid):
   file_color_dict = {}
   for item in orderid_list:
     
-    order_list = list(Orders.objects.filter(OrdersID = orderid).values())
-    item_skus = OrderItems.objects.filter(OrdersID_id = item['OrdersID_id'], ItemSKU = item['ItemSKU_id']).values_list('ItemSKU_id', flat=True).get()
+    # item_skus = OrderItems.objects.filter(OrdersID_id = item['OrdersID_id'], ItemSKU = item['ItemSKU_id']).values_list('ItemSKU_id', flat=True).get()
     item_name = PrintModels.objects.filter(ModelSKU = item['ItemSKU_id']).values_list('ModelName', flat=True).get()
     file_names = list(PrintFileData.objects.filter(ParentSKU = item['ItemSKU_id']).values_list('FileName', 'Color', 'FileWeight', 'FileTime', 'PrintQuantity', 'PrintWeight', 'PrintTime'))
     
@@ -324,7 +325,7 @@ def details(request, orderid):
 
 
     itemDictEntry = {
-      'item_skus': item_skus,
+      'item_skus': item['ItemSKU_id'],
       'item_name': item_name,
       'file_names': file_names,
       'file_colors': file_colors,
@@ -359,8 +360,7 @@ def details(request, orderid):
     
 
 
-  return render(request, 'details.html', {'oid': oid, 
-  'order_list': order_list, "item_skus": item_skus, "orderid_list": orderid_list,
+  return render(request, 'details.html', {'oid': oid, "orderid_list": orderid_list,
   'newItemList': newItemList, 'printfilestatus': printfilestatus, 'pfsdata': pfsdata,
   'listCount': listCount})  
 
