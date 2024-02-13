@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_extensions',
     'pjtapp',
+    'livereload',
     # 'testapp',
     # 'crispy_forms',
 ]

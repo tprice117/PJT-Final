@@ -14,15 +14,10 @@
       crossorigin="anonymous"
     />
     {% endcomment %}
+    <link rel="stylesheet" href="{%static 'style.css'%}" />
 
     {% comment %} <link rel="stylesheet" href="{%static 'style.css'%}" /> {% endcomment %}
-    <link
-      rel="stylesheet"
-      href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <style>
+       {% comment %} <style>
       .details-content-table {
         border-collapse: collapse;
         margin: 25px 0;
@@ -86,83 +81,110 @@
         
       }
 
+    </style> {% endcomment %}
+    <style>
+      #flex1{
+        background-color: #000000;
+      }
+      .collapseButton {
+        vertical-align: text-top;
+      }
+      
+      th, td {
+        padding: 1em;
+      }
+      
+      #hidden {
+        display: none;
+      }
+      
+      .Table {
+        margin-left: 12em;
+        margin-top: 1em;
+        margin-right: 1em;
+      }
+      
+      table {
+        border-collapse: collapse;
+      }
+      
+      table tr:nth-child(even) {
+        background-color: #5873C1;
+        color: white;
+      }
+      
+      table tr:nth-child(odd) {
+        background-color: #3756B1;
+        color: white;
+      }
+      
+      table th {
+        background-color: #092168;
+      }
+      
+      table th, td {
+        padding: 1em;
+        text-align: center;
+      }
+      
+      #collapseButton:hover {
+        background-color: #092168;
+      }
+      #rcorners1{
+        background-color: #000000;
+        float: right;
+        position: absolute;
+      }
+      
+      {% comment %} #ui-content{
+        background-color: #000000;
+      }
+      #flex1{
+        background-color: #000000;
+      } {% endcomment %}
     </style>
-    
   </head>
   <body>
-    <script>
-      jQuery(document).ready(function(){
-        // This button will increment the value
-        $('[data-quantity="plus"]').click(function(e){
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            fieldName = $(this).attr('data-field');
-            // Get its current value
-            var currentVal = parseInt($('input[name='+fieldName+']').val());
-            // If is not undefined
-            if (!isNaN(currentVal)) {
-                // Increment
-                $('input[name='+fieldName+']').val(currentVal + 1);
-            } else {
-                // Otherwise put a 0 there
-                $('input[name='+fieldName+']').val(0);
-            }
-        });
-        // This button will decrement the value till 0
-        $('[data-quantity="minus"]').click(function(e) {
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            fieldName = $(this).attr('data-field');
-            // Get its current value
-            var currentVal = parseInt($('input[name='+fieldName+']').val());
-            // If it isn't undefined or its greater than 0
-            if (!isNaN(currentVal) && currentVal > 0) {
-                // Decrement one
-                $('input[name='+fieldName+']').val(currentVal - 1);
-            } else {
-                // Otherwise put a 0 there
-                $('input[name='+fieldName+']').val(0);
-            }
-        });
-      });
-    
-    
-    </script>
+
     <h1>Details</h1>
     <div class="container-2">
-      {% if oid != None %} {% for i in newItemList %}
-      <div data-role="main" class="ui-content">
-        <div data-role="collapsible">
-          <h1>
-          <table class="home-content-table">
+      {% if oid != None %} 
+      {% for i in newItemList %}
+      <div class="flex1">
+        <table class="home-content-table">
+          <tr>
+            <th></th>
             <th>Item SKU</th>
             <th>Item Name</th>
-            <tr>
-              <td>{{i.item_skus}}</td>
-              <td>{{i.item_name}}</td>
-            </tr>
+          </tr>
+          <tr>
+            <td id="collapseButton" onclick="collapse(this)">+</td>
+            <td>{{i.item_skus}}</td>
+            <td>{{i.item_name}}</td>
+          </tr>
             
-          </table>
+          {% comment %} </table> {% endcomment %}
           {% comment %} <td>{{pfsdata.0}}</td> {% endcomment %}
 
-          </h1>
           {% comment %} <tr>
             <h1>ItemSKU:{{i.item_skus}}, {{i.item_name}}</h1>
           </tr> {% endcomment %}
-          <table style="width:100%" class="details-content-table">
-            
-          <th>Complete Order</th>
-          <th>FileName</th>
-          <th>Color</th>
-          <th>FileWeight</th>
-          <th>FileTime</th>
-          <th>PQuant</th>
-          <th>PWeight</th>
-          <th>PTime</th>
-          <th style="width:80%">Files Completed</th>
-          {% comment %} {% for a,b in i.concList %} {% endcomment %}
+          <tr id="hidden">
+            <td colspan=3>
+            <table>
+              <tr>
+                <th>Complete Order</th>
+                <th>FileName</th>
+                <th>Color</th>
+                <th>FileWeight</th>
+                <th>FileTime</th>
+                <th>PQuant</th>
+                <th>PWeight</th>
+                <th>PTime</th>
+                <th style="width:80%">Files Completed</th>
+              </tr>
+          </tr>
+            {% comment %} {% for a,b in i.concList %} {% endcomment %}
           
           {%for a,b in i.concList %}
               <tr>
@@ -193,70 +215,52 @@
                     <input id="submit" type="submit" value="Submit" onClick="refreshPage()">
                   </form> 
                 </td>
-
-                  <script>
-                    function increment() {
-                      // Get the current value from the input field
-                      var currentValue = parseInt(document.getElementById("CompletedFiles").value);
-                
-                      // Increment the value by 1
-                      var newValue = currentValue + 1;
-                
-                      // Update the input field with the new value
-                      document.getElementById("CompletedFiles").value = newValue;
-                    }
-                
-                    function decrement() {
-                      // Get the current value from the input field
-                      var currentValue = parseInt(document.getElementById("CompletedFiles").value);
-                
-                      // Decrement the value by 1, but ensure it doesn't go below 0
-                      var newValue = currentValue > 0 ? currentValue - 1 : 0;
-                
-                      // Update the input field with the new value
-                      document.getElementById("CompletedFiles").value = newValue;
-                    }
-                  </script>
                   {% comment %} <a href="/update/{{j.0}}">{{j.0}}</a> {% endcomment %}
 
                   {% comment %} <input type="number" , name="filescompleted", value="filescompleted", placeholder="0"/> {% endcomment %}
                   {% comment %} <td><button class="submit", name="save", value="save">Save Changes</button></td> {% endcomment %}
               </tr>
-            </th>
           {%endfor%}
-          <script>
-            $(document).ready(function() {
-              $('.minus').click(function () {
-                var $input = $(this).parent().find('input');
-                var count = parseInt($input.val()) - 1;
-                count = count < 0 ? 0 : count;
-                $input.val(count);
-                $input.change();
-                return false;
-              });
-              $('.plus').click(function () {
-                var $input = $(this).parent().find('input');
-                $input.val(parseInt($input.val()) + 1);
-                $input.change();
-                return false;
-              });
-            });
-          </script>
-        </table>
+            </table>
+          </td>
 
-        </div>
-      </div>
-      
       {%endfor%} {%endif%}
-      
-    </div>
-
-
-  <td>
-      {{file_colors_dict}} <br />
-      {{file_colors_dict}}
+        </tr>
+      </table>
     </td>
-    <div id="footer">
+  </tr>
+</div>
+      <script>
+        {% comment %} $(document).ready(function() {
+          $('.minus').click(function () {
+            var $input = $(this).parent().find('input');
+            var count = parseInt($input.val()) - 1;
+            count = count < 0 ? 0 : count;
+            $input.val(count);
+            $input.change();
+            return false;
+          });
+          $('.plus').click(function () {
+            var $input = $(this).parent().find('input');
+            $input.val(parseInt($input.val()) + 1);
+            $input.change();
+            return false;
+          });
+        }); {% endcomment %}
+        function collapse(cell){
+          var row = cell.parentElement;
+          var target_row = row.parentElement.children[row.rowIndex + 1];
+          if (target_row.style.display == 'table-row') {
+            cell.innerHTML = '+';
+            target_row.style.display = 'none';
+          } else {
+            cell.innerHTML = '-';
+            target_row.style.display = 'table-row';
+          }
+        }
+      </script>
+      
+    <div class="footer">
       <a href="uploadorders" class="button">Upload new Orders</a>
       {% comment %} <a href={%url 'update_Object' oid.id%} class="button">Upload new Print Models</a> {% endcomment %}
         <a href="/" class="button">Order Summary</a>
