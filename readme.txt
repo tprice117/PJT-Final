@@ -6,13 +6,17 @@ CREATE VOLUMES:
 CREATE NETWORK:
 	docker network create satbnet
 
-DROP ALL TABLES IN DBEAVER:
-	- CTRL + ]
-	- DROP SCHEMA public CASCADE;
-		CREATE SCHEMA public;
-	- CTRL + Enter
 
 1. docker-compose up -d
+
+	If you need to drop all of the tables in the schema run this:
+		DROP ALL TABLES IN DBEAVER:
+			- CTRL + ]
+			- DROP SCHEMA public CASCADE;
+				CREATE SCHEMA public;
+			- CTRL + Enter
+
+
 
 2. CLI INTO "pjt-final-web"
 	- can do this through docker desktop and accessing 
