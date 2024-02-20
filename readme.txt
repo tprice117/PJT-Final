@@ -1,53 +1,41 @@
-Run in order:
+NEW ORDER:
 
 CREATE VOLUMES: 
 	docker volume create postgres_db
 	docker volume create postgres_config
-	docker volume create postgres_dev_db
-	docker volume create postgres_dev_config
 CREATE NETWORK:
 	docker network create satbnet
 
-1. docker-compose run web django-admin startproject djangoproject .
+DROP ALL TABLES IN DBEAVER:
+	- CTRL + ]
+	- DROP SCHEMA public CASCADE;
+		CREATE SCHEMA public;
+	- CTRL + Enter
 
-2. Go to "settings.py" in /djangoproject/
+1. docker-compose up -d
 
-3. Change "Databases = {...}" to:
-	DATABASES = {
-    	    'default': {
-        	'ENGINE': 'django.db.backends.postgresql',
-        	'NAME': 'POSTGRES_NAME',
-        	'USER': 'POSTGRES_USER',
-        	'PASSWORD': 'POSTGRES_PASSWORD',
-        	'HOST': 'db',
-        	'PORT': 5432,
-    }
-4. docker-compose up -d
+2. CLI INTO "pjt-final-web"
+	- can do this through docker desktop and accessing 
+		its terminal or application on github through an
+		extension
 
-5. Change "ALLOWED_HOSTS = []" to "ALLOWED_HOSTS = ['*']"
+3. cd into pjtsite
 
-6. http://localhost:8000
+4. run "python manage.py makemigrations"
+	- if you run into an error referencing views,
+	follow these steps:
+		- go to urls.py under pjtapp/pjtsite
+		- comment out line 9-10, and 20-27
+		- try running it again
+5. run "python manage.py migrate"
+	- open dbeaver and see if the schema is there
+		-	The schema and table strucutre should be under 
+		postgres/Databases/postgres/schemas/public/TABLES
 
+6. launch localhost:8000/uploadorders/ and input a csv file and click upload
+	-	continue this for 
+		-	localhost:8000/uploadprintmodels
+		-	localhost:8000/uploadorderitems
+		-	localhost:8000/uploadprintdata
 
-How to get Data Importing Scripts to Work:
-
-1. Migrations should be done
-	- python manage.py makemigrations
-	- python manage.py migrate
-
-2. Use the scripts through a bash shell integrated on the web container (CLI or attaching the bash shell directly)
-
-<<<<<<< HEAD
-3. Run command for loading data scripts initially:
-	- python manage.py runscript initial_load
-=======
-3. Run commands for loading data scripts:
-	- python manage.py runscript orders_load
-	- python manage.py runscript printmodels_load
-	- python manage.py runscript orderitems_load
-	- python manage.py runscript printfiledata_load
-
-!!!WARNING!!! If initial loading, orders_load and printmodels_load must be run first before other scripts as other scripts are dependent on them
->>>>>>> 0367fe90db4dce7e7b71c2b9c81b7edb00e5cd75
-
-Make sure the data is loaded correctly by using Dbeaver CE, pgAdmin, or any other database viewer
+7. Go to localhost:8000 and it should be working
