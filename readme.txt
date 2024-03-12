@@ -29,7 +29,7 @@ CREATE NETWORK:
 	- if you run into an error referencing views,
 	follow these steps:
 		- go to urls.py under pjtapp/pjtsite
-		- comment out line 9-10, and 20-27
+		- comment out line 9-10, and 19-26
 		- try running it again
 5. run "python manage.py migrate"
 	- open dbeaver and see if the schema is there

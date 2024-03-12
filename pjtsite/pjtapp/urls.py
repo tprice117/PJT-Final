@@ -10,7 +10,6 @@ from . import views
 from .views import uploadorders
 
 
-# from pjtapp.views import homeListView
 
 
 app_name = 'pjtapp'

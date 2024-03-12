@@ -38,7 +38,7 @@ services:
     ports:
       - "8000:8000"
     expose:
-      - "8080"
+      - "8000"
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
@@ -46,6 +46,14 @@ services:
 
     depends_on:
       - db
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro 
+
 volumes:
   postgres_db:
     external: true
