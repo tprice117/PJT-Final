@@ -1,74 +1,25 @@
 version: "3.11"
 
-
-
 services:
-  # webserver:
-  #   image: nginx:latest
-  #   ports:
-  #     - "80:80"
-  #   networks: 
-  #     my-macvlan-network:
-  #       ipv4_address: 192.168.1.100
-
-  db:
-    restart: always
-    #network_mode: satbnet
-    image: postgres:latest
-    # networks:
-    #   - vlan
-    volumes:
-      - postgres_db:/var/lib/postgresql/data
-      - ./postgres_config:/var/lib/postgresql/config
-    environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-
   web:
-    #network_mode: satbnet
-    build: .
+    build: ./app
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
-    command: python pjtsite/manage.py runserver 0.0.0.0:8000
-    # networks:
-    #   - vlan
+      - ./app/:/usr/src/app/
     ports:
-      - "8000:8000"
-    expose:
-      - "8000"
-    environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-
+      - 8000:8000
+    env_file:
+      - ./.env.dev
     depends_on:
       - db
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "8080:80"
+  db:
+    image: postgres:15
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro 
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=pjtsite
+      - POSTGRES_PASSWORD=pjtsite
+      - POSTGRES_DB=pjtsite_dev
 
 volumes:
-  postgres_db:
-    external: true
-
-# networks:
-#   my-macvlan-network:
-#     driver: macvlan
-#     driver_opts:
-#       parent: eth0
-    
-# networks:
-#   vlan:
-#     driver: macvlan
-#     ipam:
-#       config:
-#         - subnet: "192.168.0.0/24"
-#           ip_range: "192.168.0.64/26"
-#           gateway: "192.168.86.56"
+  postgres_data:

@@ -1,0 +1,111 @@
+body {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+}
+
+body * {
+  font-family: Ubuntu;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
+  margin: 0;
+}
+
+a,
+a:hover,
+a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.collapsible {
+  background-color: #4b5dac;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active,
+.collapsible:hover {
+  background-color: #5265a8;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #3e4d8f;
+  color: rgb(255, 255, 255);
+}
+
+.container {
+  height: 200px;
+  position: relative;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+a.button {
+  appearance: button;
+  background-color: #b8f1ff;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.container-2 {
+  border: 1px #ccc solid;
+  display: flex;
+  flex-direction: column;
+  padding: 100px;
+}
+
+.box-1 {
+  flex: 1;
+  order: 1;
+  padding: 10px;
+}
+
+.box-2 {
+  flex: 2;
+  order: 2;
+  padding: 10px;
+}
+
+.box-3 {
+  flex: 3;
+  order: 3;
+  padding: 10px;
+}
+.button2 {
+  border-radius: 50%;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: grey;
+  color: white;
+  text-align: center;
+}
